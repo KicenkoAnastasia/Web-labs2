@@ -7,9 +7,12 @@ def web():
     return """<!doctype html>
         <html>
            <body>
-               <h1>Wev-серверна flask</h1>
+               <h1>Web-сервер на flask</h1>
            </body>
-        </html>"""
+        </html>""", 200, {
+            'X-Server': 'turist', 
+            'Content-Type': 'text/plain; charset=utf-8'
+            }
 
 @app.route("/author")
 def author():
@@ -68,8 +71,8 @@ def created():
 </html>
 ''', 201
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
-@app.errorhandler(404)
-def not_found(err):
-    return "нет такой страницы", 404
+# @app.errorhandler(404)
+# def not_found(err):
+#     return "нет такой страницы", 404
