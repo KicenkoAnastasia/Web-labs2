@@ -2,6 +2,39 @@ from flask import Flask, url_for, redirect
 app = Flask (__name__)
 
 
+@app.route('/')
+@app.route('/index')
+def index():
+    return '''
+<!doctype html>
+<html>
+    <head>
+        <title>НГТУ, ФБ, Лабораторные работы</title>
+    </head>
+    <body>
+        <header>
+            <h1>НГТУ, ФБ, WEB-программирование, часть 2</h1>
+        </header>
+        
+        <nav>
+            <ul>
+                <li><a href="/lab1">Первая лабораторная</a></li>
+            </ul>
+        </nav>
+        
+        <footer>
+            <p>Киценко Анастасия Валерьевна</p>
+            <p>ФБИ-21, Факультет ФБ, 2024 год</p>
+        </footer>
+    </body>
+</html>
+'''
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
 @app.route("/lab1/web")
 def web(): 
     return """<!doctype html>
