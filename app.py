@@ -33,6 +33,44 @@ def index():
 if __name__ == '__main__':
     app.run(debug=True)
 
+@app.route("/lab1")
+def lab1():
+    css_path = url_for("static", filename="menu.css")
+    
+    return '''
+        <!doctype html>
+        <html>
+            <head>
+                <title>Лабораторная 1</title>
+                <link rel="stylesheet" type="text/css" href="''' + css_path + '''">
+            </head>
+            <body>
+                <header>
+                    <h1>НГТУ | ФБ | WEB-программирование | часть 2</h1>
+                </header>
+                
+                <nav class="text">
+                    Flask — фреймворк для создания веб-приложений на языке
+                    программирования Python, использующий набор инструментов
+                    Werkzeug, а также шаблонизатор Jinja2. Относится к категории так
+                    называемых микрофреймворков — минималистичных каркасов
+                    веб-приложений, сознательно предоставляющих лишь самые базовые возможности.
+                </nav>
+                <nav>
+                   <a href="/">
+                        <div class="back">
+                        Назад  
+                        </div>
+                    </a>
+                 </nav>
+                <footer>
+                    <p>Киценко Анастасия Валерьевна</p>
+                    <p>ФБИ-21, Факультет ФБ, 2024 год</p>
+                </footer>
+            </body>
+        </html>
+    '''
+
 
 
 @app.route("/lab1/web")
@@ -139,3 +177,106 @@ def created():
 # @app.errorhandler(404)
 # def not_found(err):
 #     return "нет такой страницы", 404
+
+
+
+
+#коды 
+# 400 Bad Request
+@app.route('/400')
+def bad_request():
+    return '''
+    <!doctype html>
+    <html>
+        <head><title>400 Bad Request</title></head>
+        <body>
+            <h1>400 Bad Request</h1>
+            <p>Ваш запрос был неверным или неполным.</p>
+        </body>
+    </html>
+    ''', 400
+
+# 401 Unauthorized
+@app.route('/401')
+def unauthorized():
+    return '''
+    <!doctype html>
+    <html>
+        <head><title>401 Unauthorized</title></head>
+        <body>
+            <h1>401 Unauthorized</h1>
+            <p>Доступ запрещён. Необходима авторизация.</p>
+        </body>
+    </html>
+    ''', 401
+
+# 402 Payment Required (зарезервирован для будущего использования)
+@app.route('/402')
+def payment_required():
+    return '''
+    <!doctype html>
+    <html>
+        <head><title>402 Payment Required</title></head>
+        <body>
+            <h1>402 Payment Required</h1>
+            <p>Эта функция требует оплаты.</p>
+        </body>
+    </html>
+    ''', 402
+
+# 403 Forbidden
+@app.route('/403')
+def forbidden():
+    return '''
+    <!doctype html>
+    <html>
+        <head><title>403 Forbidden</title></head>
+        <body>
+            <h1>403 Forbidden</h1>
+            <p>У вас нет прав для доступа к этому ресурсу.</p>
+        </body>
+    </html>
+    ''', 403
+
+# 404 Not Found
+@app.route('/404')
+def Not_Found():
+    return '''
+    <!doctype html>
+    <html>
+        <head><title>405 Method Not Allowed</title></head>
+        <body>
+            <h1>404 Not Found</h1>
+            <p>указанный пользователем метод нельзя применить к текущему ресурсу.</p>
+        </body>
+    </html>
+    ''', 404
+
+
+# 405 Method Not Allowed
+@app.route('/405')
+def method_not_allowed():
+    return '''
+    <!doctype html>
+    <html>
+        <head><title>405 Method Not Allowed</title></head>
+        <body>
+            <h1>405 Method Not Allowed</h1>
+            <p>Метод запроса не поддерживается для данного ресурса.</p>
+        </body>
+    </html>
+    ''', 405
+
+# 418 I'm a teapot (шутливый код)
+@app.route('/418')
+def teapot():
+    return '''
+    <!doctype html>
+    <html>
+        <head><title>418 I'm a teapot</title></head>
+        <body>
+            <h1>418 I'm a teapot</h1>
+            <p>Я чайник. Этот сервер не может заварить кофе.</p>
+        </body>
+    </html>
+    ''', 418
