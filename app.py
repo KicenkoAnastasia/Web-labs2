@@ -240,18 +240,29 @@ def forbidden():
 
 # 404 Not Found
 @app.route('/404')
-def Not_Found():
+def not_found():
+    path = url_for("static", filename="KOT2.jpg")
+    css_path = url_for("static", filename="404.css")
     return '''
     <!doctype html>
     <html>
-        <head><title>405 Method Not Allowed</title></head>
+        <head>
+            <title>404 Method Not Allowed</title>
+            <link rel="stylesheet" type="text/css" href="''' + css_path + '''">  <!-- Подключение CSS -->
+        </head>
         <body>
-            <h1>404 Not Found</h1>
-            <p>указанный пользователем метод нельзя применить к текущему ресурсу.</p>
+            <div class="block">
+                <div class="per">
+                    <h1>AAAAAAA?</h1>
+                    <p class="raz"><b>Ошибка 404. Ништяяяк</b></p>
+                </div>
+                <div class="vtor">
+                    <img src="''' + path + '''">
+                </div>
+            </div>
         </body>
     </html>
     ''', 404
-
 
 # 405 Method Not Allowed
 @app.route('/405')
