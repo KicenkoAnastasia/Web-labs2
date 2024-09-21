@@ -291,3 +291,29 @@ def teapot():
         </body>
     </html>
     ''', 418
+
+    #8
+    
+    # Маршрут, который вызывает ошибку
+@app.route('/error')
+def trigger_error():
+    result = 1 / 0  
+    return f"Результат: {result}"
+
+# Перехватчик ошибки 500 
+@app.errorhandler(500)
+def internal_server_error(error):
+    return '''
+    <!doctype html>
+    <html>
+        <head>
+            <title>Ошибка 500 - Внутренняя ошибка сервера</title>
+        </head>
+        <body>
+            <h1>Ошибка 500</h1>
+            <p>Произошла внутренняя ошибка сервера. Пожалуйста, попробуйте позже.</p>
+            <p>Если ошибка повторяется, обратитесь в службу поддержки.</p>
+        </body>
+    </html>
+    ''', 500
+
