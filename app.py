@@ -1,4 +1,5 @@
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for, redirect, make_response
+
 app = Flask (__name__)
 
 
@@ -316,4 +317,56 @@ def internal_server_error(error):
         </body>
     </html>
     ''', 500
+
+#9
+@app.route('/homa')
+def homa():
+    # Путь к изображению, которое лежит в папке static
+    path1 = url_for("static", filename="hom1.jpg")
+    path2 = url_for("static", filename="hom2.jpg")
+    css_path = url_for("static", filename="9.css")
+    
+    # HTML контент с несколькими абзацами текста и изображением
+    content = '''
+    <!doctype html>
+    <html>
+        <head><title>О хомяке</title>
+        
+        <link rel="stylesheet" type="text/css" href="''' + css_path + '''">
+        <link href="https://fonts.googleapis.com/css2?family=TT+Norms+Tochka+Extended+DemiBold&display=swap" rel="stylesheet">
+        </head>
+        <body>
+        <header>
+                <h1>Мемы с хомяком</h1>
+            </header>
+            <div>
+                <div>
+                    <h1> Что означает мем с хомяком</h1>
+                    <p>Пользователи придумали два варианта шаблона: в первом мы весь ролик смотрим на хомяка, которого сопровождает описание 
+                    грустной ситуации. А во втором — можем переключить две картинки: с событием и животным, которое показывает своим 
+                    видом отношение к ситуации</p>
+                </div>
+                <div>
+                    <h2> Какие есть мемы с хомяком </h2>
+                    <img src="''' + path1 + '''" >
+                    <p>Мем используют, чтобы проиллюстрировать ситуации, когда у человека наворачиваются слезы на глаза. Это может быть как печаль, потому что случилось что-то плохое или сбивающее с толку, так и просто 
+                    блеск в глазах — например, когда человек хочет что-то получить и для этого старается выглядеть более милым и трогательным.Когда просто 
+                    блестят глаза. Грустный хомяк подходит, чтобы показать эмоции, как у кота из Шрека. Когда ты такой милый, но все равно или чем-то провинился,
+                    или что-то сделал не так, как все ожидают.</p>
+                    <p> Когда случилось что-то плохое. Ситуации могут быть разные — от легкой неловкости до реальной проблемы. В таком случае хомяк 
+                    плачет из-за настоящей печали.При этом страдания хомяка могут быть преувеличенными или ироничными.</p>
+                    <img src="''' + path2 + '''" >
+                </div>
+            </div>
+        </body>
+    </html>
+    '''
+    
+    # Создание ответа с заголовками
+    response = make_response(content)
+    response.headers['Content-Language'] = 'ru'  # Указываем язык содержимого
+    response.headers['Custom-Header-1'] = 'CustomValue1'  # Нестандартный заголовок 1
+    response.headers['Custom-Header-1'] = 'CustomValue2'  # Нестандартный заголовок 2
+    
+    return response
 
