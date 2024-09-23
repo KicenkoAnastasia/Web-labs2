@@ -57,13 +57,37 @@ def lab1():
                     называемых микрофреймворков — минималистичных каркасов
                     веб-приложений, сознательно предоставляющих лишь самые базовые возможности.
                 </nav>
+
                 <nav>
                    <a href="/">
-                        <div class="back">
-                        Назад  
+                        <div class="back"> 
+                        на главную
                         </div>
                     </a>
-                 </nav>
+                </nav>
+                
+            
+
+                 <h2>Список роутов</h2>
+                 <ul>
+                    <li><a href="/">/ - Главная</a></li>
+                    <li><a href="/lab1">/lab1 - Лабораторная 1</a></li>
+                    <li><a href="/lab1/web">/lab1/web - Web-сервер на Flask</a></li>
+                    <li><a href="/lab1/author">/lab1/author - Страница автора</a></li>
+                    <li><a href="/lab1/oak">/lab1/oak - Страница с изображением</a></li>
+                    <li><a href="/lab1/counter">/lab1/counter - Счётчик посещений</a></li>
+                    <li><a href="/lab1/reset_counter">/lab1/reset_counter - Сброс счётчика</a></li>
+
+                    <li><a href="/400">/400 - код 400 </a></li>
+                    <li><a href="/401">/401 - код 401 </a></li>
+                    <li><a href="/402">/402 - код 402 </a></li>
+                    <li><a href="/403">/403 - код 403 </a></li>
+                    <li><a href="/404">/404 - код 404 </a></li>
+                    <li><a href="/405">/405 - код 405 </a></li>
+                    <li><a href="/homa">/homa - грустный хомяк </a></li>
+
+                 </ul>
+
                 <footer>
                     <p>Киценко Анастасия Валерьевна</p>
                     <p>ФБИ-21, Факультет ФБ, 2024 год</p>
@@ -71,9 +95,6 @@ def lab1():
             </body>
         </html>
     '''
-
-
-
 @app.route("/lab1/web")
 def web(): 
     return """<!doctype html>
@@ -211,7 +232,7 @@ def unauthorized():
     </html>
     ''', 401
 
-# 402 Payment Required (зарезервирован для будущего использования)
+# 402 Payment Required 
 @app.route('/402')
 def payment_required():
     return '''
@@ -279,7 +300,7 @@ def method_not_allowed():
     </html>
     ''', 405
 
-# 418 I'm a teapot (шутливый код)
+# 418 I'm a teapot
 @app.route('/418')
 def teapot():
     return '''
@@ -321,12 +342,12 @@ def internal_server_error(error):
 #9
 @app.route('/homa')
 def homa():
-    # Путь к изображению, которое лежит в папке static
+   
     path1 = url_for("static", filename="hom1.jpg")
     path2 = url_for("static", filename="hom2.jpg")
     css_path = url_for("static", filename="9.css")
     
-    # HTML контент с несколькими абзацами текста и изображением
+   
     content = '''
     <!doctype html>
     <html>
@@ -364,9 +385,9 @@ def homa():
     
     # Создание ответа с заголовками
     response = make_response(content)
-    response.headers['Content-Language'] = 'ru'  # Указываем язык содержимого
-    response.headers['Custom-Header-1'] = 'CustomValue1'  # Нестандартный заголовок 1
-    response.headers['Custom-Header-1'] = 'CustomValue2'  # Нестандартный заголовок 2
+    response.headers['Content-Language'] = 'ru' 
+    response.headers['Custom-Header-1'] = 'CustomValue1'  # заголовок 1
+    response.headers['Custom-Header-1'] = 'CustomValue2'  # заголовок 2
     
     return response
 
