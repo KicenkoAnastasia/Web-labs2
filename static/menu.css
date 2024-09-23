@@ -1,0 +1,89 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0; /* Светло-серый фон для основной части */
+}
+
+
+header {
+    background-color: #ffffff; /* Белый фон для шапки */
+    padding: 20px;
+    text-align: center;
+    box-shadow: inset 0px -5px 15px -5px #3f3f3f61; /* Внутренняя тень снизу */
+    font-size: 24px;
+}
+
+
+nav {
+    
+    padding: 20px;
+    /* margin: 20px; */
+    border-radius: 8px;
+}
+
+
+footer {
+    background-color: #ffffff; /* Белый фон для подвала */
+    padding: 20px;
+    text-align:left;
+    box-shadow: inset 0px 5px 15px -5px #3f3f3f61; /* Внутренняя тень сверху */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+   
+    
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 25px;
+}
+    
+
+a:hover {
+
+    text-decoration: none;
+    color: blueviolet;
+}
+.back{
+    /* margin: 20px; */
+    margin-bottom: 20px;
+    color: #ffffff; /* Синий цвет ссылок */
+    background-color: #9b60b6fa;
+    padding: 20px;
+    padding-left: 40px;
+    border-radius: 15px;
+    cursor: pointer;
+    width:170px;
+    height: auto;
+    margin-left: 600px;
+   
+}
+
+.back:hover{
+    
+    border-radius: 15px;
+    text-decoration: none;
+    transition: 1s;
+    box-shadow:  0px 5px 20px 0px #3f3f3f61;
+}
+
+.text{
+    text-align: justify;
+}
+ul{
+    margin-bottom: 300px;
+    /* position: relative;
+    left: 500px; */
+    font-size: 25px;
+    margin-left: 550px;
+}
+h2{
+    margin-left: 650px;
+}
+nav{
+    font-size: 25px;
+}

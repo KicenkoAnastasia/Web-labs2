@@ -1,0 +1,27 @@
+img{
+    width: 35%;
+    margin-left: 300px;
+    position: relative;
+    top: -180px;
+    
+}
+
+.per{
+    position: relative;
+    top: 200px;
+    margin-left: 600px;
+    text-align: center;
+}
+.raz{
+    font-size: 40px;
+}
+
+body{
+    background-color: #6B6B6B;
+}
+div{
+    color: white;
+}
+h1{
+    font-size: 60px;
+}
