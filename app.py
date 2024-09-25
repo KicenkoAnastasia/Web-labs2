@@ -391,3 +391,41 @@ def homa():
     
     return response
 
+
+
+#ЛАБОРАТОРНАЯ №2---------------------------------------------------------------------------------------------------
+@app.route('/lab2/a')
+def a():
+    return 'без слэша'
+
+@app.route('/lab2/a/')
+def a2():
+    return 'со слэшем'
+
+
+#5 Динамические пути
+flower_list = ['роза', 'тюльпан', 'незабудка', 'ромашка', 'пион']
+
+@app.route('/lab2/flowers/<int:flower_id>')
+def flowers(flower_id):
+    if flower_id >= len(flower_list):
+        return "Такого цветка нет", 404
+    else:
+        return "цветок:" + flower_list[flower_id]
+    
+#6. Добавление цветка
+
+@app.route('/lab2/add_flower/<name>')
+def add_flower(name):
+    flower_list.append(name)
+    return f'''
+        <!doctype html>
+        <html>
+            <body>
+            <h1>Добавлен новый цветок</h1>
+            <p>Название нового цветка:  {name}</p>
+            <p>Всего цветов: {len(flower_list)}</p>
+            <p>Полный список: {flower_list}</p>
+            </body>
+        </html>
+        ''' 
