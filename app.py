@@ -447,3 +447,7 @@ def example():
     
     # Передаем переменные в шаблон
     return render_template('example.html', name=name, lab_num=lab_num, group=group, course_number=course_number, fruits=fruits)
+
+@app.route('/lab2/')
+def lab2():
+    return render_template('lab2.html')
