@@ -430,15 +430,20 @@ def add_flower(name):
         </html>
         ''' 
 
-#7 шаблоны
 @app.route('/lab2/example')
 def example():
-    name = 'Киценко А.В' 
-    lab_num = None 
-    group = None  
-    course_number = None
+    name = 'Киценко А.В'  # Имя студента
+    lab_num = None        # Номер лабораторной
+    group = None          # Группа
+    course_number = 3     # Курс
 
+    fruits = [
+        {'name':'яблоки','price': 100 }, 
+        {'name':'груши','price': 120}, 
+        {'name':'апельсины','price': 80}, 
+        {'name':'мандарины','price': 95}, 
+        {'name':'манго','price': 312}
+        ]
+    
     # Передаем переменные в шаблон
-    return render_template('example.html', name=name, lab_num=lab_num, group=group, course_number=course_number)
-
-
+    return render_template('example.html', name=name, lab_num=lab_num, group=group, course_number=course_number, fruits=fruits)
