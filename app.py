@@ -433,11 +433,12 @@ def add_flower(name):
 #7 шаблоны
 @app.route('/lab2/example')
 def example():
-    name = 'Киценко А.В'
-    lab_number = 2 
-    group = 'ФБИ-21'  
-    course_number = 3 
+    name = 'Киценко А.В' 
+    lab_num = None 
+    group = None  
+    course_number = None
 
-    return render_template('example.html', name=name, lab_number=lab_number, group=group, course_number=course_number)
+    # Передаем переменные в шаблон
+    return render_template('example.html', name=name, lab_num=lab_num, group=group, course_number=course_number)
 
 
