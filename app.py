@@ -423,7 +423,7 @@ def add_flower(name):
         <html>
             <body>
             <h1>Добавлен новый цветок</h1>
-            <p>Название нового цветка:  {name}</p>
+            <p>Название нового цветка:  {name} </p>
             <p>Всего цветов: {len(flower_list)}</p>
             <p>Полный список: {flower_list}</p>
             </body>
@@ -451,3 +451,8 @@ def example():
 @app.route('/lab2/')
 def lab2():
     return render_template('lab2.html')
+
+@app.route('/lab2/filters')
+def filters():
+    phrase = "Неверующие в <b>туриста</b> такие типа: <u>наверное</u> большинство людей умирают по <i>причине</i> болезни или старости"
+    return render_template('filter.html', phrase=phrase)
