@@ -508,3 +508,46 @@ def lab2():
 def filters():
     phrase = "Неверующие в <b>туриста</b> такие типа: <u>наверное</u> большинство людей умирают по <i>причине</i> болезни или старости"
     return render_template('filter.html', phrase=phrase)
+
+
+# 2- самостоятельное задание
+@app.route('/lab2/calc/')
+def default_calc():
+    # Перенаправляем на /lab2/calc/1/1
+    return redirect(url_for('calc', a=1, b=1))
+
+@app.route('/lab2/calc/<int:a>')
+def redirect_to_one(a):
+    # Перенаправляем на /lab2/calc/a/1
+    return redirect(url_for('calc', a=a, b=1))
+
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def calc(a, b):
+    # Выполняем математические операции
+    results = {
+        "sum": a + b,
+        "difference": a - b,
+        "product": a * b,
+        "division": a / b if b != 0 else "деление на ноль",
+        "power": a ** b
+    }
+
+    return f'''
+        <!doctype html>
+        <html>
+            <head>
+                <title>Результаты расчетов</title>
+            </head>
+            <body>
+                <h1>Расчёт с параметрами:</h1>
+                <ul>
+                    <li>{a} + {b} = {results["sum"]}</li>
+                    <li>{a} - {b} = {results["difference"]}</li>
+                    <li>{a} x {b} = {results["product"]}</li>
+                    <li>{a} / {b} = {results["division"]}</li>
+                    <li>{a}^{b} = {results["power"]}</li>
+                </ul>
+                <p><a href="/lab2/calc">Вернуться к расчету</a></p>
+            </body>
+        </html>
+    '''
