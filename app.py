@@ -554,7 +554,6 @@ def calc(a, b):
 
 #3-самостоятельное задание
 
-# Список книг
 books = [
     {"author": "Джордж Оруэлл", "title": "1984", "genre": "Антиутопия", "pages": 328},
     {"author": "Фёдор Достоевский", "title": "Преступление и наказание", "genre": "Классическая литература", "pages": 671},
@@ -570,7 +569,40 @@ books = [
 
 @app.route('/lab2/books')
 def books_list():
-    # Передаем список книг в шаблон
     return render_template('books.html', books=books)
 
 
+# 4- кошки - фото
+# Список пород кошек
+cat_breeds = [
+    {
+        "name": "Персидская кошка",
+        "image": "persian.jpg",
+        "description": "Персидские кошки известны своей длинной шерстью и спокойным характером."
+    },
+    {
+        "name": "Сиамская кошка",
+        "image": "siamese.jpg",
+        "description": "Сиамские кошки выделяются своим стройным телом и ярко-голубыми глазами."
+    },
+    {
+        "name": "Мейн-кун",
+        "image": "maine_coon.jpg",
+        "description": "Мейн-кун — одна из самых крупных пород кошек с дружелюбным нравом."
+    },
+    {
+        "name": "Бенгальская кошка",
+        "image": "bengal.jpg",
+        "description": "Бенгальские кошки известны своим леопардовым рисунком и активностью."
+    },
+    {
+        "name": "Обычный рыжий котёнок",
+        "image": "turist.jpg",
+        "description": "Поздравляем, вам попался обычный рыжий котёнок"
+    }
+]
+
+
+@app.route('/cats')
+def show_cats():
+    return render_template('cats.html', cat_breeds=cat_breeds)
