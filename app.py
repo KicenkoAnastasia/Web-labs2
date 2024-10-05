@@ -21,6 +21,9 @@ def index():
             <ul>
                 <li><a href="/lab1">Первая лабораторная</a></li>
             </ul>
+            <ul>
+                <li><a href="/lab2">Вторая лабораторная</a></li>
+            </ul>
         </nav>
         
         <footer>
@@ -606,3 +609,8 @@ cat_breeds = [
 @app.route('/cats')
 def show_cats():
     return render_template('cats.html', cat_breeds=cat_breeds)
+
+
+@app.route('/')
+def home_page(): 
+    return render_template('index.html')
