@@ -1,0 +1,122 @@
+/* Общие стили для страницы */
+body {
+    background-color: #6b6a6a;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header, footer {
+    background-color: #4d4c4c;
+    color: white;
+    padding: 20px 0;
+    font-size: 1.5em;
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: center;
+}
+
+footer {
+    text-align: right;
+}
+
+/* Стиль для абзацев */
+p {
+    background-color: #feb7b0;
+    color: #6b6a6a;
+    border-radius: 7px;
+    padding: 10px 15px;
+    margin: 20px auto;
+    width: fit-content;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: box-shadow 0.5s ease;
+    box-shadow: none;
+}
+
+p:hover {
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.5); 
+}
+
+/* Стиль для ссылок */
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    color: #feb7b0;
+}
+
+/* Стиль для заголовков и списка */
+h1, li, ol {
+    color: white;
+}
+
+/* Стили для кнопок */
+button {
+    background-color: #feb7b0;
+    color: #6b6a6a;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 15px;
+    margin: 10px auto;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: box-shadow 0.5s ease;
+    display: block;
+}
+
+button:hover {
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Стили для списка цветов */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 10px 0;
+}
+
+/* Центрирование всех объектов на странице */
+body, main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Стили для полей ввода формы */
+input[type="text"], input[type="number"] {
+    background-color: transparent; /* Прозрачный фон */
+    border: 2px solid white; /* Белая обводка */
+    border-radius: 7px;
+    color: white; /* Белый текст */
+    padding: 10px;
+    margin: 10px 0;
+    width: 250px;
+    font-size: 1.2em;
+    outline: none; /* Убираем стандартную обводку при фокусе */
+}
+
+input[type="text"]::placeholder, input[type="number"]::placeholder {
+    color: white; /* Белый текст внутри для заполнения */
+    opacity: 0.8; /* Немного прозрачный текст заполнителя */
+}
+
+/* Добавляем эффект при фокусе */
+input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #feb7b0; /* Розовая обводка при фокусе */
+    box-shadow: 0 0 10px 3px rgba(255, 183, 176, 0.8);
+}

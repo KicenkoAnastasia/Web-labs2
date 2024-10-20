@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% if name %}
+        {{ name }}. Лабораторная работа 2
+    {% else %}
+        Турист. Лабораторная работа 2
+    {% endif %}</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='ex.css')}}">
+</head>
+<body>
+    <header> WEB-программирование, часть 2. {% if lab_num %} Лабораторная работа {{ lab_num }} {% endif %} </header>
+
+</body>
+<main> 
+    <p> 5+2={{5+2}}</p>
+    <p>11*28={{11*28}}</p>
+    <p>3258-759={{3258-759}}</p>
+    <p>8452/793={{8452/793}}</p>
+    <p>45<sup>8</sup>={{ 45**8 }}</p> 
+    <p>  
+            {% for f in fruits %}<br>
+            {{ loop.index }} - {{ f.name }}:{{ f.price }} &#x20bd;
+            {% endfor %}
+        
+    </p>
+</main>
+<footer>
+    &copy;
+        {% if name %}
+            {{ name }},
+        {% else %}
+            Турист,
+        {% endif %}
+
+        {% if group %}
+            {{ group }},
+        {% else %}
+            Группа не указана,
+        {% endif %}
+
+        {% if course_number %}
+            {{ course_number }} курс,
+        {% else %}
+            Курс не указан,
+        {% endif %}
+        2024
+</footer>
+
+</html>
