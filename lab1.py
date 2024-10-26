@@ -1,14 +1,10 @@
-from flask import Blueprint, url_for, redirect, make_response, render_template, request
-
+from flask import Blueprint, url_for
 lab1 = Blueprint('lab1', __name__)
-if __name__ == '__main__':
-    lab1.run(debug=True)
 
 
 @lab1.route("/lab1")
 def lab():
     css_path = url_for("static", filename="menu.css")
-    
     return '''
         <!doctype html>
         <html>
@@ -36,11 +32,9 @@ def lab():
                         </div>
                     </a>
                 </nav>
-                
-            
 
-                 <h2>Список роутов</h2>
-                 <ul>
+                <h2>Список роутов</h2>
+                <ul>
                     <li><a href="/">/ - Главная</a></li>
                     <li><a href="/lab1">/lab1 - Лабораторная 1</a></li>
                     <li><a href="/lab1/web">/lab1/web - Web-сервер на Flask</a></li>
@@ -48,7 +42,6 @@ def lab():
                     <li><a href="/lab1/oak">/lab1/oak - Страница с изображением</a></li>
                     <li><a href="/lab1/counter">/lab1/counter - Счётчик посещений</a></li>
                     <li><a href="/lab1/reset_counter">/lab1/reset_counter - Сброс счётчика</a></li>
-
                     <li><a href="/400">/400 - код 400 </a></li>
                     <li><a href="/401">/401 - код 401 </a></li>
                     <li><a href="/402">/402 - код 402 </a></li>
@@ -56,8 +49,7 @@ def lab():
                     <li><a href="/404">/404 - код 404 </a></li>
                     <li><a href="/405">/405 - код 405 </a></li>
                     <li><a href="/homa">/homa - грустный хомяк </a></li>
-
-                 </ul>
+                </ul>
 
                 <footer>
                     <p>Киценко Анастасия Валерьевна</p>
@@ -148,11 +140,6 @@ def reset_counter():
 '''
 
 
-@lab1.route("/lab1/info")
-def info():
-    return redirect("/lab1/author")
-
-
 @lab1.route("/lab1/created")
 def created():
     return '''
@@ -164,6 +151,3 @@ def created():
     </body>
 </html>
 ''', 201
-
-
-
