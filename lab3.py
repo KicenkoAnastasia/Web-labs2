@@ -166,3 +166,46 @@ def submit_ticket():
     }
 
     return render_template('lab3/ticket.html', ticket_info=ticket_info)
+
+
+
+# Список товаров (смартфоны)
+products = [
+    {"name": "Смартфон A", "price": 15000, "color": "черный", "brand": "Бренд X"},
+    {"name": "Смартфон B", "price": 20000, "color": "белый", "brand": "Бренд Y"},
+    {"name": "Смартфон C", "price": 25000, "color": "зеленый", "brand": "Бренд Z"},
+    {"name": "Смартфон D", "price": 30000, "color": "синий", "brand": "Бренд W"},
+    {"name": "Смартфон E", "price": 35000, "color": "красный", "brand": "Бренд V"},
+    {"name": "Смартфон F", "price": 45000, "color": "черный", "brand": "Бренд U"},
+    {"name": "Смартфон G", "price": 50000, "color": "белый", "brand": "Бренд T"},
+    {"name": "Смартфон H", "price": 60000, "color": "серый", "brand": "Бренд S"},
+    {"name": "Смартфон I", "price": 70000, "color": "синий", "brand": "Бренд R"},
+    {"name": "Смартфон J", "price": 80000, "color": "зеленый", "brand": "Бренд Q"},
+    {"name": "Смартфон K", "price": 90000, "color": "черный", "brand": "Бренд P"},
+    {"name": "Смартфон L", "price": 100000, "color": "белый", "brand": "Бренд O"},
+    {"name": "Смартфон M", "price": 110000, "color": "красный", "brand": "Бренд N"},
+    {"name": "Смартфон N", "price": 120000, "color": "синий", "brand": "Бренд M"},
+    {"name": "Смартфон O", "price": 130000, "color": "серый", "brand": "Бренд L"},
+    {"name": "Смартфон P", "price": 140000, "color": "черный", "brand": "Бренд K"},
+    {"name": "Смартфон Q", "price": 150000, "color": "белый", "brand": "Бренд J"},
+    {"name": "Смартфон R", "price": 160000, "color": "зеленый", "brand": "Бренд I"},
+    {"name": "Смартфон S", "price": 170000, "color": "красный", "brand": "Бренд H"},
+    {"name": "Смартфон T", "price": 180000, "color": "синий", "brand": "Бренд G"},
+]
+
+@lab3.route('/lab3/search/', methods=['GET', 'POST'])
+def search_form():
+    return render_template('lab3/search_form.html')
+
+@lab3.route('/lab3/results/', methods=['POST'])
+def search_results():
+    min_price = request.form.get('min_price', type=float)
+    max_price = request.form.get('max_price', type=float)
+
+    # Фильтрация товаров по цене
+    filtered_products = [
+        product for product in products
+        if min_price <= product['price'] <= max_price
+    ]
+
+    return render_template('lab3/search_results.html', products=filtered_products)

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title >Результаты поиска</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='lab1/ex.css') }}">
+</head>
+<body>
+    <h1 class="zagolovok">Результаты поиска</h1>
+    {% if products %}
+        <ul class="zagolovok">
+            {% for product in products %}
+                <li>
+                    <strong>{{ product.name }}</strong><br>
+                    Цена: {{ product.price }} руб.<br>
+                    Цвет: {{ product.color }}<br>
+                    Бренд: {{ product.brand }}<br>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Товары не найдены в заданном диапазоне цен.</p>
+    {% endif %}
+    <a href="{{ url_for('lab3.search_form') }}">Назад к поиску</a>
+</body>
+</html>

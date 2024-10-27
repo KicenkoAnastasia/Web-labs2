@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск товаров</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='lab1/ex.css') }}">
+</head>
+<body>
+    <h1 class="zagolovok">Поиск товаров по цене</h1>
+    <form action="{{ url_for('lab3.search_results') }}" method="post">
+        <label for="min_price" class="minmax">Мин. цена:</label> 
+        <input type="number" id="min_price" name="min_price" required>
+
+        <label for="max_price" class="minmax">Макс. цена:</label>
+        <input type="number" id="max_price" name="max_price" required>
+
+        <button type="submit" class="knopk">Искать</button>
+    </form>
+</body>
+</html>
