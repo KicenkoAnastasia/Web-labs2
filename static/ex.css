@@ -64,9 +64,56 @@ a{
     text-decoration: none;
     color: white;
 }
-div, h1, li, ol{
+/* div, h1, li, ol{
     color: white;
-}
+} */
 footer {
    text-align: right;
+}
+.error{
+    color: red;
+}
+
+.spisok ul {
+    list-style-type: none; /* Убирает маркеры списка */
+    padding: 0; 
+    margin: 0;
+    font-size: 25px;
+}
+
+.spisok li {
+    list-style-type: none;
+    margin-bottom: 8px;
+    font-size: 25px;
+}
+.zag{
+    font-size: 28px;
+    color: #feb7b0;
+}
+.knopk {
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #feb7b0; 
+    border-radius: 6px; 
+    padding: 10px 20px;
+    font-size: 16px; 
+    cursor: pointer; 
+    transition: all 1s;
+}
+
+.knopk:hover {
+    background-color: #feb7b0; 
+    border-color: #feb7b0; 
+    color: #6b6a6a;
+}
+input{
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #ffffff; 
+    border-radius: 6px; 
+    padding: 10px 20px;
+    font-size: 16px; 
+    cursor: pointer; 
+    margin: 10px;
+    
 }

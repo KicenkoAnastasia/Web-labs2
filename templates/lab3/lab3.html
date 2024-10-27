@@ -8,11 +8,14 @@
     Привет, <span style="color: {{ name_color or 'black' }}"> {{ name or 'None' }}</span>!
 </div>
 <div>Список сделанных страниц:</div>
-    <ol>
-        <li><a href="/lab3/cookie">Куки</a></li>
-        <li><a href="/lab3/del_cookie">Очистка кук</a></li>
-        <li><a href="/lab3/form1">Форма</a></li>
-        
-    </ol>
+    <div class="spisok">
+        <ol>
+            <li><a href="/lab3/cookie">Куки</a></li>
+            <li><a href="/lab3/del_cookie">Очистка кук</a></li>
+            <li><a href="/lab3/form1">Форма</a></li>
+            <li><a href="/lab3/order.html">Заказ напитка</a></li>
+            <li><a href="/lab3/settings">Цвет текста</a></li>
+        </ol>
+    </div>
 {% endblock %}
 
