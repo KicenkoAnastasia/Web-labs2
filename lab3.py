@@ -119,3 +119,50 @@ def clear_settings():
     resp.delete_cookie('font_size')
     resp.delete_cookie('font_style')
     return resp
+
+
+@lab3.route('/lab3/ticket_form/')
+def ticket_form():
+    return render_template('lab3/ticket_form.html')
+
+@lab3.route('/lab3/submit_ticket/', methods=['POST'])
+def submit_ticket():
+    # Получаем данные из формы
+    fio = request.form.get('fio')
+    shelf = request.form.get('shelf')
+    bedding = request.form.get('bedding') == 'on'
+    luggage = request.form.get('luggage') == 'on'
+    age = int(request.form.get('age'))
+    departure = request.form.get('departure')
+    destination = request.form.get('destination')
+    date = request.form.get('date')
+    insurance = request.form.get('insurance') == 'on'
+
+    # Проверка возраста
+    if age < 1 or age > 120:
+        return "Возраст должен быть от 1 до 120 лет", 400
+
+    # Определение стоимости билета
+    base_price = 1000 if age >= 18 else 700
+    if shelf in ['нижняя', 'нижняя боковая']:
+        base_price += 100
+    if bedding:
+        base_price += 75
+    if luggage:
+        base_price += 250
+    if insurance:
+        base_price += 150
+
+    # Создание страницы с билетом
+    ticket_info = {
+        'fio': fio,
+        'shelf': shelf,
+        'age': age,
+        'departure': departure,
+        'destination': destination,
+        'date': date,
+        'price': base_price,
+        'ticket_type': 'Детский билет' if age < 18 else 'Взрослый билет'
+    }
+
+    return render_template('lab3/ticket.html', ticket_info=ticket_info)

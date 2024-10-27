@@ -4,7 +4,7 @@ lab1 = Blueprint('lab1', __name__)
 
 @lab1.route("/lab1")
 def lab():
-    css_path = url_for("static", filename="menu.css")
+    css_path = url_for("static", filename="lab1/menu.css")
     return '''
         <!doctype html>
         <html>
@@ -92,7 +92,7 @@ def author():
 @lab1.route('/lab1/oak')
 def oak():
     path = url_for("static", filename="oak.jpg")
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return '''
 <!doctype html>
 <html>

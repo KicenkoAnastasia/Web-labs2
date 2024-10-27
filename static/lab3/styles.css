@@ -2,11 +2,17 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     color: #333;
+    display: flex; /* Включаем flexbox для всего body */
+    justify-content: center; /* Центрируем содержимое по горизонтали */
+    align-items: center; /* Центрируем содержимое по вертикали */
+    height: 100vh; /* Задаем высоту body равной высоте окна браузера */
+    margin: 0; /* Убираем отступы */
 }
 
 h1 {
     color: #5a5a5a;
     text-align: center;
+    margin-bottom: 20px; /* Добавим отступ снизу, чтобы заголовок не сливался с формой */
 }
 
 form {
@@ -23,6 +29,7 @@ form {
 
 label, div {
     margin: 10px 0;
+    text-align: center; /* Центрируем текст меток и элементов ввода */
 }
 
 button {
@@ -32,6 +39,7 @@ button {
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
+    width: 100%; /* Задаем ширину кнопки равной ширине контейнера */
 }
 
 button:hover {
@@ -42,4 +50,5 @@ a {
     color: #4CAF50;
     text-decoration: none;
     margin-top: 10px;
+    text-align: center; /* Центрируем ссылку */
 }

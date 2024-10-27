@@ -267,8 +267,8 @@ def forbidden():
 # 404 Not Found
 @app.route('/404')
 def not_found():
-    path = url_for("static", filename="KOT2.jpg")
-    css_path = url_for("static", filename="404.css")
+    path = url_for("static", filename="lab1/KOT2.jpg")
+    css_path = url_for("static", filename="lab1/404.css")
     return '''
     <!doctype html>
     <html>
@@ -347,9 +347,9 @@ def internal_server_error(error):
 @app.route('/homa')
 def homa():
    
-    path1 = url_for("static", filename="hom1.jpg")
-    path2 = url_for("static", filename="hom2.jpg")
-    css_path = url_for("static", filename="9.css")
+    path1 = url_for("static", filename="lab1/hom1.jpg")
+    path2 = url_for("static", filename="lab1/hom2.jpg")
+    css_path = url_for("static", filename="lab1/9.css")
     
    
     content = '''

@@ -113,13 +113,13 @@ def example():
 
 @lab2.route('/lab2/')
 def lab2_home():
-    return render_template('lab2.html')
+    return render_template('lab2/lab2.html')
 
 
 @lab2.route('/lab2/filters')
 def filters():
     phrase = "Неверующие в <b>туриста</b> такие типа: <u>наверное</u> большинство людей умирают по <i>причине</i> болезни или старости"
-    return render_template('filter.html', phrase=phrase)
+    return render_template('lab2/filter.html', phrase=phrase)
 
 
 # 2- самостоятельное задание
@@ -220,7 +220,7 @@ cat_breeds = [
 
 @lab2.route('/cats')
 def show_cats():
-    return render_template('cats.html', cat_breeds=cat_breeds)
+    return render_template('lab2/cats.html', cat_breeds=cat_breeds)
 
 
 @lab2.route('/')
