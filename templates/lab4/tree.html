@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block lab %}Нравится/не нравится{% endblock %}
+
+{% block content %}
+    <div style="color: white; margin-bottom: 20px;">
+        Посажено деревьев: {{ tree_count }}
+    </div>
+    <form method="post">
+        <button class="knopk" name="operation" value="plant">Посадить дерево</button>
+        <button class="knopk" name="operation" value="cut">Срубить дерево</button>
+    </form>
+{% endblock %}
