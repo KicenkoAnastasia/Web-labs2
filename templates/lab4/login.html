@@ -38,6 +38,11 @@
     
     {% if authorized %}
         <h1>Добро пожаловать, {{ login }}!</h1>
+        <div>
+            <form action="/lab4/logout" method="POST">
+                <button class="knopk">Выход</button>
+            </form>
+        </div>
     {% else %}
         <h1>Вход</h1>
         <h2>Пожалуйста, авторизуйтесь</h2>
