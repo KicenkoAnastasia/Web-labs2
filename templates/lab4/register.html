@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+   
+    form {
+        display: flex;
+        flex-direction: column;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    form div {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: white;
+    }
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    button {
+        margin-right: 5px;
+    }
+
+    h1, h2 {
+        color: white;
+    }
+</style>
+<h1>Регистрация</h1>
+<form method="post">
+    <div>
+        <label for="login">Логин:</label>
+        <input type="text" id="login" name="login">
+    </div>
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password">
+    </div>
+    <div>
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name">
+    </div>
+    <div>
+        <label for="gender">Пол:</label>
+        <select name="gender" id="gender">
+            <option value="M">Мужской</option>
+            <option value="F">Женский</option>
+        </select>
+    </div>
+    <button type="submit" class="knopk">Зарегистрироваться</button>
+</form>
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+{% endblock %}

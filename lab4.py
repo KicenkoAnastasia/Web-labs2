@@ -201,3 +201,69 @@ def order_grain():
             message = 'Ошибка: не поддерживаемое зерно'
 
     return render_template('lab4/order_grain.html', message=message)
+
+
+#доп. задание
+
+@lab4.route('/lab4/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        login = request.form.get('login')
+        password = request.form.get('password')
+        name = request.form.get('name')
+        gender = request.form.get('gender')
+
+        if not login or not password or not name:
+            return render_template('lab4/register.html', error='Все поля должны быть заполнены')
+
+        for user in users:
+            if user['login'] == login:
+                return render_template('lab4/register.html', error='Пользователь с таким логином уже существует')
+
+        users.append({'login': login, 'password': password, 'name': name, 'gender': gender})
+        return redirect('/lab4/login')
+
+    return render_template('lab4/register.html')
+
+
+@lab4.route('/lab4/users', methods=['GET'])
+def users_list():
+    if 'login' not in session:
+        return redirect('/lab4/login')  # Перенаправление на страницу логина для неавторизованных пользователей
+    
+    return render_template('lab4/users.html', users=users)
+
+
+@lab4.route('/lab4/delete_user', methods=['POST'])
+def delete_user():
+    if 'login' not in session:
+        return redirect('/lab4/login')  # Перенаправление, если пользователь не авторизован
+    
+    user_login = session['login']
+    global users
+    users = [user for user in users if user['login'] != user_login]
+    
+    # Очистка сессии и перенаправление на страницу входа после удаления
+    session.pop('login', None)
+    session.pop('name', None)
+    return redirect('/lab4/login')
+
+@lab4.route('/lab4/edit_user', methods=['GET', 'POST'])
+def edit_user():
+    if 'login' not in session:
+        return redirect('/lab4/login')  # Перенаправление для неавторизованных
+    
+    user_login = session['login']
+    user = next((u for u in users if u['login'] == user_login), None)
+    
+    if request.method == 'POST':
+        new_name = request.form.get('name')
+        new_password = request.form.get('password')
+        
+        if user and new_name and new_password:
+            user['name'] = new_name
+            user['password'] = new_password
+            session['name'] = new_name  # Обновление сессии с новым именем
+            return redirect('/lab4/users')
+
+    return render_template('lab4/edit_user.html', user=user)

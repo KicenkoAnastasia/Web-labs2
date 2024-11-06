@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирование содержимого */
+        max-width: 300px;
+        margin: 0 auto; /* Центрирование формы */
+    }
+
+    form div {
+        margin-bottom: 15px;
+        width: 100%; /* Полная ширина для элементов внутри */
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: white;
+        text-align: center; /* Центрирование текста метки */
+    }
+
+    input {
+        width: 100%; /* Ширина инпута */
+        box-sizing: border-box;
+        text-align: center; /* Центрирование текста в инпуте */
+    }
+
+    button {
+        margin-top: 10px;
+        text-align: center;
+        width: 100%; /* Полная ширина кнопки */
+    }
+
+    h1, h2 {
+        color: white;
+        text-align: center; /* Центрирование заголовков */
+    }
+</style>
+
+<h1>Редактировать данные</h1>
+<form method="post">
+    <label for="name">Имя:</label>
+    <input type="text" id="name" name="name" value="{{ user['name'] }}">
+    
+    <label for="password">Новый пароль:</label>
+    <input type="password" id="password" name="password">
+    
+    <button type="submit" class="knopk">Сохранить изменения</button>
+</form>
+{% endblock %}

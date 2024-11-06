@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block lab %}Умножение{% endblock %}
+{% block content %}
+    <form method="post" action="/lab4/mul">
+        <h1>Умножение чисел</h1>
+        <input type="number" name="x1"> * <input type="number" name="x2">
+        <input type="submit" value="=">
+    </form>
+    <a href="{{ url_for('lab4.lab') }}">Вернуться в меню</a>
+{% endblock %}
