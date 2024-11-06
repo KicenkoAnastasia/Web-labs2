@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирование элементов внутри формы */
+        max-width: 300px;
+        margin: 0 auto; /* Центрирование самой формы */
+    }
+
+    form div {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: white;
+        text-align: center; /* Центрирование текста метки */
+    }
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center; /* Центрирование текста в поле ввода */
+    }
+
+    button {
+        margin-top: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    h1, h2 {
+        color: white;
+        text-align: center; /* Центрирование заголовков */
+    }
+</style>
+
+<h1>Управление температурой холодильника</h1>
+<form method="post">
+    <label for="temperature">Задайте температуру (°С):</label>
+    <input type="number" id="temperature" name="temperature">
+    <button type="submit" class="knopk">Установить</button>
+</form>
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+{% endblock %}
