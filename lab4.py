@@ -144,7 +144,7 @@ def logout():
     session.pop('name', None)
     return redirect('/lab4/login')
 
-# самостоятельное задание . 2.Холоильник
+# самостоятельное задание . 2.Холодильник
 @lab4.route('/lab4/fridge', methods=['GET', 'POST'])
 def fridge():
     message = None
@@ -166,3 +166,38 @@ def fridge():
             message = 'Ошибка: не задана температура'
 
     return render_template('lab4/fridge.html', message=message)
+
+
+# самостоятельное задание . 3. Заказ зерна.
+grain_prices = {
+    'Ячмень': 12345,
+    'Овёс': 8522,
+    'Пшеница': 8722,
+    'Рожь': 14111
+}
+
+@lab4.route('/lab4/order_grain', methods=['GET', 'POST'])
+def order_grain():
+    message = None
+    if request.method == 'POST':
+        grain = request.form.get('grain')  # Пользователь выбирает зерно по-русски
+        try:
+            weight = float(request.form.get('weight'))
+            if weight <= 0:
+                message = 'Ошибка: вес должен быть больше 0'
+            elif weight > 500:
+                message = 'Ошибка: такого объёма нет в наличии'
+            else:
+                price_per_ton = grain_prices[grain]  # Получаем цену на зерно по-русски
+                total_price = price_per_ton * weight
+                discount_applied = ''
+                if weight > 50:
+                    total_price *= 0.9  # Скидка 10% за объём
+                    discount_applied = ' Применена скидка 10%.'
+                message = f'Заказ успешно сформирован. Вы заказали {grain}. Вес: {weight} т. Сумма к оплате: {total_price:.2f} руб.{discount_applied}'
+        except (TypeError, ValueError):
+            message = 'Ошибка: некорректно указан вес'
+        except KeyError:
+            message = 'Ошибка: не поддерживаемое зерно'
+
+    return render_template('lab4/order_grain.html', message=message)

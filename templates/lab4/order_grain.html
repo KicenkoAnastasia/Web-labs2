@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 300px;
+        margin: 0 auto; 
+    }
+
+    form div {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: white;
+        text-align: center; 
+    }
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center; 
+    }
+
+    button {
+        margin-top: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    h1, h2 {
+        color: white;
+        text-align: center; 
+    }
+</style>
+<h1>Заказ зерна</h1>
+<form method="post">
+    <label for="grain">Выберите зерно:</label>
+    <select name="grain" id="grain">
+        <option value="Ячмень">Ячмень</option>
+        <option value="Овёс">Овёс</option>
+        <option value="Пшеница">Пшеница</option>
+        <option value="Рожь">Рожь</option>
+    </select>
+    <label for="weight">Вес (т):</label>
+    <input type="number" id="weight" name="weight" min="1">
+    <button type="submit" class="knopk">Заказать</button>
+</form>
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+{% endblock %}
