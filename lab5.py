@@ -11,13 +11,13 @@ def lab():
 
 def db_connect():
     conn = psycopg2.connect(
-        host = '127.0.0.1',
-        database = 'kicenko_anastasia_knowledge_base',
-        user = 'kicenko_anastasia_knowledge_base',
-        password ='123'
+        host='127.0.0.1',
+        database='kicenko_anastasia_knowledge_base',
+        user='kicenko_anastasia_knowledge_base',
+        password='123',
+        options="-c client_encoding=UTF8"  # Принудительно устанавливаем кодировку UTF-8 для соединения
     )
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     return conn, cur
 
 def db_close(conn, cur):
@@ -89,4 +89,31 @@ def login():
 @lab5.route('/lab5/logout')
 def logout():
     session.pop('login', None)  # Удаляем логин пользователя из сессии
-    return redirect(url_for('lab5.lab'))  # Перенаправляем на главную страницу 
+    return redirect(url_for('lab5.lab'))  # Перенаправляем на главную страницу
+    
+
+@lab5.route('/lab5/create', methods=['GET', 'POST'])
+def create():
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+    
+    if request.method == 'GET':
+        return render_template('lab5/create_article.html')
+    
+    title = request.form.get('title')
+    article_text = request.form.get('article_text')
+
+    conn, cur = db_connect()
+
+    # Добавлена запятая перед кортежем (login,)
+    cur.execute("SELECT * FROM users WHERE login=%s;", (login,))
+    login_id = cur.fetchone()["id"]
+
+    # Исправлено: используется параметризованный запрос для вставки данных
+    cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", 
+                (login_id, title, article_text))
+
+    # Закрытие соединения
+    db_close(conn, cur)
+    return redirect('/lab5')
