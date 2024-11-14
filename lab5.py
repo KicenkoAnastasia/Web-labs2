@@ -6,6 +6,7 @@ import sqlite3
 from os import path
 from flask import current_app
 
+
 lab5 = Blueprint('lab5', __name__)
 
 
@@ -21,22 +22,33 @@ def db_connect():
         )
         cur = conn.cursor(cursor_factory=RealDictCursor)
     else:
-        dir_path = path.dirname(path.realpath(_file_))
+        dir_path = path.dirname(path.realpath(__file__))  # Исправлено на __file__
         db_path = path.join(dir_path, "database.db")
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
     return conn, cur
 
+
 # Функция для закрытия соединения с базой данных
 def db_close(conn, cur):
-    conn.commit()
-    cur.close()
-    conn.close()
+    try:
+        if conn and not conn.closed:
+            conn.commit()  # Применяем изменения, если необходимо
+    except psycopg2.InterfaceError:
+        # Игнорируем ошибку, если соединение уже закрыто
+        pass
+    finally:
+        if cur:
+            cur.close()  # Закрываем курсор
+        if conn and not conn.closed:
+            conn.close()  # Закрываем соединение
+
 
 @lab5.route('/lab5/')
 def lab():
     return render_template('/lab5/lab5.html', login=session.get('login'))
+
 
 @lab5.route('/lab5/register', methods=['GET', 'POST'])
 def register():
@@ -64,7 +76,9 @@ def register():
     finally:
         db_close(conn, cur)
 
-    return render_template('lab5/success.html', login=login)
+    # После успешной регистрации перенаправляем на страницу входа
+    return redirect(url_for('lab5.login'))
+
 
 @lab5.route('/lab5/login', methods=['GET', 'POST'])
 def login():
@@ -82,7 +96,7 @@ def login():
         # Проверка наличия пользователя
         cur.execute("SELECT * FROM users WHERE login = %s;", (login,))
         user = cur.fetchone()
-        
+
         if not user or not check_password_hash(user['password'], password):
             return render_template('lab5/login.html', error='Логин и/или пароль неверны')
 
@@ -90,12 +104,15 @@ def login():
     finally:
         db_close(conn, cur)
 
-    return render_template('lab5/success_login.html', login=login)
+    # После успешного входа перенаправляем на страницу с успехом
+    return redirect(url_for('lab5.lab'))
+
 
 @lab5.route('/lab5/logout')
 def logout():
     session.pop('login', None)
     return redirect(url_for('lab5.lab'))
+
 
 @lab5.route('/lab5/create', methods=['GET', 'POST'])
 def create():
@@ -125,6 +142,7 @@ def create():
         db_close(conn, cur)
 
     return redirect('/lab5')
+
 
 @lab5.route('/lab5/list')
 def list():
