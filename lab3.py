@@ -4,7 +4,7 @@ lab3 = Blueprint('lab3', __name__)
 
 @lab3.route('/lab3/')
 def lab():
-    # Получение значения куки с именем 'name' и 'age'
+
     name = request.cookies.get('name', 'аноним')  # Значение по умолчанию - 'аноним'
     name_color = request.cookies.get('name_color', 'неизвестный')  # Значение по умолчанию - 'неизвестный'
     age = request.cookies.get('age', 'неизвестный возраст')  # Значение по умолчанию - 'неизвестный возраст'

@@ -180,7 +180,7 @@ grain_prices = {
 def order_grain():
     message = None
     if request.method == 'POST':
-        grain = request.form.get('grain')  # Пользователь выбирает зерно по-русски
+        grain = request.form.get('grain') 
         try:
             weight = float(request.form.get('weight'))
             if weight <= 0:
@@ -188,7 +188,7 @@ def order_grain():
             elif weight > 500:
                 message = 'Ошибка: такого объёма нет в наличии'
             else:
-                price_per_ton = grain_prices[grain]  # Получаем цену на зерно по-русски
+                price_per_ton = grain_prices[grain]  
                 total_price = price_per_ton * weight
                 discount_applied = ''
                 if weight > 50:
