@@ -6,9 +6,7 @@ import sqlite3
 from os import path
 from flask import current_app
 
-
 lab5 = Blueprint('lab5', __name__)
-
 
 # Функция для подключения к базе данных
 def db_connect():
@@ -29,7 +27,6 @@ def db_connect():
         cur = conn.cursor()
     return conn, cur
 
-
 # Функция для закрытия соединения с базой данных
 def db_close(conn, cur):
     try:
@@ -44,11 +41,9 @@ def db_close(conn, cur):
         if conn and not conn.closed:
             conn.close()  # Закрываем соединение
 
-
 @lab5.route('/lab5/')
 def lab():
     return render_template('/lab5/lab5.html', login=session.get('login'))
-
 
 @lab5.route('/lab5/register', methods=['GET', 'POST'])
 def register():
@@ -79,7 +74,6 @@ def register():
     # После успешной регистрации перенаправляем на страницу входа
     return redirect(url_for('lab5.login'))
 
-
 @lab5.route('/lab5/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -104,15 +98,13 @@ def login():
     finally:
         db_close(conn, cur)
 
-    # После успешного входа перенаправляем на страницу с успехом
+    # После успешного входа перенаправляем на главную страницу
     return redirect(url_for('lab5.lab'))
-
 
 @lab5.route('/lab5/logout')
 def logout():
     session.pop('login', None)
     return redirect(url_for('lab5.lab'))
-
 
 @lab5.route('/lab5/create', methods=['GET', 'POST'])
 def create():
@@ -120,32 +112,35 @@ def create():
     if not login:
         return redirect('/lab5/login')
 
-    if request.method == 'GET':
-        return render_template('lab5/create_article.html')
+    if request.method == 'POST':
+        title = request.form.get('title')
+        article_text = request.form.get('article_text')
 
-    title = request.form.get('title')
-    article_text = request.form.get('article_text')
+        # Валидация данных
+        if not title or not article_text:
+            return render_template('lab5/create_article.html', error="Название и текст статьи не могут быть пустыми.")
 
-    conn, cur = db_connect()
-    try:
-        # Получение ID пользователя
-        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
-        user = cur.fetchone()
-        if not user:
-            return redirect('/lab5/login')
+        conn, cur = db_connect()
+        try:
+            # Получение ID пользователя
+            cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
+            user = cur.fetchone()
+            if not user:
+                return redirect('/lab5/login')
 
-        login_id = user["id"]
-        # Вставка новой статьи
-        cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", 
-                    (login_id, title, article_text))
-    finally:
-        db_close(conn, cur)
+            login_id = user["id"]
+            # Вставка новой статьи
+            cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", 
+                        (login_id, title, article_text))
+        finally:
+            db_close(conn, cur)
 
-    return redirect('/lab5')
+        return redirect('/lab5')
 
+    return render_template('lab5/create_article.html')
 
 @lab5.route('/lab5/list')
-def list():
+def list_articles():
     login = session.get('login')
     if not login:
         return redirect('/lab5/login')
@@ -162,7 +157,83 @@ def list():
         # Выборка всех статей пользователя
         cur.execute("SELECT * FROM articles WHERE user_id=%s;", (login_id,))
         articles = cur.fetchall()
+
+        if not articles:
+            return render_template('/lab5/articles.html', message="У вас нет ни одной статьи.")
     finally:
         db_close(conn, cur)
 
     return render_template('/lab5/articles.html', articles=articles)
+
+@lab5.route('/lab5/delete/<int:article_id>', methods=['POST'])
+def delete_article(article_id):
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    conn, cur = db_connect()
+    try:
+        # Получаем статью по ID
+        cur.execute("SELECT * FROM articles WHERE id = %s;", (article_id,))
+        article = cur.fetchone()
+
+        if not article:
+            return redirect('/lab5/list')
+
+        # Проверяем, что статья принадлежит текущему пользователю
+        cur.execute("SELECT id FROM users WHERE login = %s;", (login,))
+        user = cur.fetchone()
+        
+        if article['user_id'] != user['id']:
+            return redirect('/lab5/list')
+
+        # Удаляем статью
+        cur.execute("DELETE FROM articles WHERE id = %s;", (article_id,))
+        conn.commit()
+
+        return redirect('/lab5/list')
+    finally:
+        db_close(conn, cur)
+
+
+@lab5.route('/lab5/edit/<int:article_id>', methods=['GET', 'POST'])
+def edit_article(article_id):
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    conn, cur = db_connect()
+    try:
+        # Получаем статью по ID
+        cur.execute("SELECT * FROM articles WHERE id = %s;", (article_id,))
+        article = cur.fetchone()
+
+        if not article:
+            return redirect('/lab5/list')
+
+        # Проверяем, что статья принадлежит текущему пользователю
+        cur.execute("SELECT id FROM users WHERE login = %s;", (login,))
+        user = cur.fetchone()
+        
+        if article['user_id'] != user['id']:
+            return redirect('/lab5/list')
+
+        if request.method == 'POST':
+            title = request.form.get('title')
+            article_text = request.form.get('article_text')
+
+            # Валидация данных
+            if not title or not article_text:
+                return render_template('lab5/edit_article.html', article=article, error="Название и текст статьи не могут быть пустыми.")
+
+            # Обновляем статью в базе данных
+            cur.execute("UPDATE articles SET title = %s, article_text = %s WHERE id = %s;", 
+                        (title, article_text, article_id))
+            conn.commit()
+
+            return redirect('/lab5/list')
+
+        # Отображаем форму редактирования с текущими данными статьи
+        return render_template('lab5/edit_article.html', article=article)
+    finally:
+        db_close(conn, cur)
