@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Редактирование статьи{% endblock %}
 
 {% block content %}
-
 <style>
-
     body {
         display: flex;
         justify-content: center;
@@ -16,25 +14,20 @@
         font-family: Arial, sans-serif;
     }
     
-    .form-container {
+    form {
         display: flex;
         flex-direction: column;
         align-items: stretch;
         justify-content: center; 
-        max-width: 320px;
+        max-width: 300px;
         padding: 20px;
-        background-color: #6988a7;
+        background-color: #34495e;
         border-radius: 8px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        position: relative;
-        height: 400px; 
     }
-    
-    .error-message {
-        color: rgb(255, 163, 163);
-        text-align: center;
+    div {
+        width: 100%;
         margin-bottom: 15px;
-        height: 20px; 
     }
 
     label {
@@ -43,7 +36,7 @@
         color: white;
     }
     
-    input, textarea {
+    input {
         width: 100%;
         padding: 10px;
         border: none;
@@ -51,11 +44,6 @@
         background-color: #ecf0f1;
         color: black;
         box-sizing: border-box;
-    }
-    
-    textarea {
-        resize: none;
-        height: 100px;
     }
 
     button {
@@ -92,35 +80,30 @@
         width: 100%;
         bottom: 0;
     }
-
+    p{
+        text-align: center;
+    }
 </style>
+<h1>Редактирование статьи</h1>
 
-<h1>Создание статьи</h1>
+<form method="POST">
+    <div >
+        <label for="title">Название статьи:</label>
+        <input type="text" id="title" name="title" value="{{ article['title'] }}">
+    </div>
 
-<div class="form-container">
-    {% if error %}
-        <div class="error-message">{{ error }}</div>
-    {% else %}
-        <div class="error-message">&nbsp;</div> 
-    {% endif %}
-    
-    <form method="post">
-        <div>
-            <label>Название статьи:
-                <input type="text" maxlength="50" name="title">
-            </label>
-        </div>
+    <div>
+        <label for="article_text">Текст статьи:</label>
+        <textarea id="article_text" name="article_text">{{ article['article_text'] }}</textarea>
+    </div>
 
-        <div>
-            <label>Текст статьи:
-                <textarea name="article_text"></textarea>
-            </label>
-        </div>
+    <button type="submit">Сохранить изменения</button>
+</form>
 
-        <div>
-            <button type="submit">Готово</button>
-        </div>
-    </form>
-</div>
+{% if error %}
+    <div style="color: red; font-size: 14px; margin-top: 10px; text-align: center;">
+        <p>{{ error }}</p>
+    </div>
+{% endif %}
 
 {% endblock %}

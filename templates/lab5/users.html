@@ -1,11 +1,7 @@
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
-
 {% block content %}
-
 <style>
-
     body {
         display: flex;
         justify-content: center;
@@ -16,25 +12,20 @@
         font-family: Arial, sans-serif;
     }
     
-    .form-container {
+    form {
         display: flex;
         flex-direction: column;
         align-items: stretch;
         justify-content: center; 
-        max-width: 320px;
+        max-width: 300px;
         padding: 20px;
-        background-color: #6988a7;
+        background-color: #5c7997;
         border-radius: 8px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        position: relative;
-        height: 400px; 
     }
-    
-    .error-message {
-        color: rgb(255, 163, 163);
-        text-align: center;
+    div {
+        width: 100%;
         margin-bottom: 15px;
-        height: 20px; 
     }
 
     label {
@@ -43,7 +34,7 @@
         color: white;
     }
     
-    input, textarea {
+    input {
         width: 100%;
         padding: 10px;
         border: none;
@@ -51,11 +42,6 @@
         background-color: #ecf0f1;
         color: black;
         box-sizing: border-box;
-    }
-    
-    textarea {
-        resize: none;
-        height: 100px;
     }
 
     button {
@@ -92,35 +78,27 @@
         width: 100%;
         bottom: 0;
     }
-
+    p{
+        text-align: center;
+    }
+    .knopk2{
+        color: #ffffff;
+        background-color: #242f3a; 
+        border-radius: 6px; 
+        padding: 10px 20px;
+        font-size: 16px; 
+        cursor: pointer; 
+        transition: all 1s;
+        margin-top: 20px;
+    }
 </style>
-
-<h1>Создание статьи</h1>
-
-<div class="form-container">
-    {% if error %}
-        <div class="error-message">{{ error }}</div>
-    {% else %}
-        <div class="error-message">&nbsp;</div> 
-    {% endif %}
-    
-    <form method="post">
-        <div>
-            <label>Название статьи:
-                <input type="text" maxlength="50" name="title">
-            </label>
-        </div>
-
-        <div>
-            <label>Текст статьи:
-                <textarea name="article_text"></textarea>
-            </label>
-        </div>
-
-        <div>
-            <button type="submit">Готово</button>
-        </div>
-    </form>
-</div>
-
+<h1>Список всех пользователей</h1>
+<form>
+    <ul style="color: white; font-size: 20px;">
+        {% for user in users %}
+            <li>{{ user['login'] }}</li>
+        {% endfor %}
+    </ul>
+</form>
+<a href="{{ url_for('lab5.lab') }}" class="knopk2">Главная страница</a>
 {% endblock %}
