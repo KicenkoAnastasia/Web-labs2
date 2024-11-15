@@ -139,31 +139,27 @@ def create():
 
     return render_template('lab5/create_article.html')
 
+
 @lab5.route('/lab5/list')
 def list_articles():
-    login = session.get('login')
-    if not login:
-        return redirect('/lab5/login')
-
+    # Получаем все статьи (в том числе публичные)
     conn, cur = db_connect()
     try:
-        # Получение ID пользователя
-        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
-        user = cur.fetchone()
-        if not user:
-            return redirect('/lab5/login')
-
-        login_id = user["id"]
-        # Выборка всех статей пользователя
-        cur.execute("SELECT * FROM articles WHERE user_id=%s;", (login_id,))
+        # Получаем все статьи
+        cur.execute("""
+            SELECT * FROM articles 
+            ORDER BY is_favorite DESC;
+        """)
         articles = cur.fetchall()
 
         if not articles:
-            return render_template('/lab5/articles.html', message="У вас нет ни одной статьи.")
+            return render_template('/lab5/articles.html', message="Нет статей.")
+
     finally:
         db_close(conn, cur)
 
     return render_template('/lab5/articles.html', articles=articles)
+
 
 @lab5.route('/lab5/delete/<int:article_id>', methods=['POST'])
 def delete_article(article_id):
@@ -237,3 +233,65 @@ def edit_article(article_id):
         return render_template('lab5/edit_article.html', article=article)
     finally:
         db_close(conn, cur)
+
+
+@lab5.route('/lab5/users')
+def list_users():
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    conn, cur = db_connect()
+    try:
+        # Получаем список логинов всех пользователей
+        cur.execute("SELECT login FROM users;")
+        users = cur.fetchall()
+    finally:
+        db_close(conn, cur)
+
+    return render_template('/lab5/users.html', users=users)
+
+@lab5.route('/lab5/public_articles')
+def public_articles():
+    conn, cur = db_connect()
+    try:
+        cur.execute("SELECT title, article_text, user_id FROM articles WHERE is_public = TRUE;")
+        public_articles = cur.fetchall()
+    finally:
+        db_close(conn, cur)
+
+    return render_template('/lab5/public_articles.html', articles=public_articles)
+
+
+
+
+    #доп задание, добавление в любимые 
+@lab5.route('/lab5/toggle_favorite/<int:article_id>', methods=['POST'])
+def toggle_favorite(article_id):
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    conn, cur = db_connect()
+    try:
+        # Получаем ID пользователя
+        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
+        user = cur.fetchone()
+        if not user:
+            return redirect('/lab5/login')
+
+        # Проверяем, что статья принадлежит текущему пользователю
+        cur.execute("SELECT * FROM articles WHERE id = %s;", (article_id,))
+        article = cur.fetchone()
+
+        if not article or article['user_id'] != user['id']:
+            return redirect('/lab5/list')
+
+        # Переключаем статус "любимой" статьи
+        new_favorite_status = not article['is_favorite']
+        cur.execute("UPDATE articles SET is_favorite = %s WHERE id = %s;", (new_favorite_status, article_id))
+        conn.commit()
+    finally:
+        db_close(conn, cur)
+
+    return redirect(url_for('lab5.list_articles'))
