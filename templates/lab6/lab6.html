@@ -1,6 +1,8 @@
 <!-- lab6.html -->
 {% extends "base.html" %}
+
 {% block lab %}Лабораторная работа 6{% endblock %}
+
 {% block head %}
 <style>
     body {
@@ -20,61 +22,57 @@
     ul#office-list {
         list-style: none;
         padding: 0;
-        text-align: right; 
+        text-align: right;
     }
     ul#office-list li {
         margin: 5px 0;
         font-size: 18px;
-        display: flex; 
+        display: flex;
         justify-content: space-between;
-        align-items: center; 
+        align-items: center;
     }
     .knopk {
         padding: 10px 20px;
-        background-color: #ff5a7d; 
+        background-color: #ff5a7d;
         color: white;
         border: none;
         border-radius: 5px;
         font-size: 14px;
         cursor: pointer;
-        margin-left: 10px; 
+        margin-left: 10px;
         transition: background-color 0.3s, transform 0.2s;
     }
-
     .knopk:hover {
-        background-color: #d24665; 
-        transform: scale(1.05); 
+        background-color: #d24665;
+        transform: scale(1.05);
     }
-
     .knopk:active {
-        background-color: #d24665; 
+        background-color: #d24665;
     }
     .auth-links {
-        display: flex; 
+        display: flex;
         justify-content: center;
         gap: 20px;
-        margin-bottom: 20px; 
+        margin-bottom: 20px;
     }
-
     .auth-links a {
         color: white;
         text-decoration: none;
         padding: 8px 16px;
         border-radius: 5px;
-        background-color: #ff5a7d; 
+        background-color: #ff5a7d;
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
-
     .auth-links a:hover {
-        background-color: #ff5a7d; 
+        background-color: #ff5a7d;
         transform: scale(1.05);
     }
-
     .auth-links a:active {
         background-color: #d24665;
     }
 </style>
 {% endblock %}
+
 {% block script %}
 <script>
     function getOfficeList() {
@@ -84,6 +82,7 @@
             'method': 'info',
             'id': Math.round(Math.random() * 1000)
         };
+    
         fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -94,23 +93,36 @@
             const officeList = data.result;
             const ul = document.getElementById('office-list');
             ul.innerHTML = ''; // Clear the existing list
+    
             officeList.forEach(office => {
                 const li = document.createElement('li');
                 li.innerText = `${office.number}: ${office.tenant || 'Свободен'}`;
-                
+    
+                // Кнопка для бронирования
                 const bookingButton = document.createElement('button');
                 bookingButton.innerText = 'Зарезервировать';
                 bookingButton.classList.add('knopk'); // Добавляем класс "knopk"
                 bookingButton.onclick = function() {
                     booking(office.number);
                 };
-                
                 li.appendChild(bookingButton);
+    
+                // Кнопка для освобождения
+                if (office.tenant) {
+                    const cancelButton = document.createElement('button');
+                    cancelButton.innerText = 'Освободить';
+                    cancelButton.classList.add('knopk'); // Кнопка с тем же стилем
+                    cancelButton.onclick = function() {
+                        cancelBooking(office.number);
+                    };
+                    li.appendChild(cancelButton);
+                }
+    
                 ul.appendChild(li);
             });
         });
     }
-
+    
     function booking(officeNumber) {
         const url = '/lab6/json-rps-api';
         const json = {
@@ -119,6 +131,7 @@
             'params': officeNumber,
             'id': Math.round(Math.random() * 1000)
         };
+    
         fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -142,16 +155,43 @@
                 }
             } else {
                 alert('Офис успешно забронирован!');
-                getOfficeList();
+                getOfficeList(); // Обновить список офисов
             }
         });
     }
-
+    
+    function cancelBooking(officeNumber) {
+        const url = '/lab6/json-rps-api';
+        const json = {
+            'jsonrpc': '2.0',
+            'method': 'cancelation',  // Новый метод для снятия аренды
+            'params': officeNumber,
+            'id': Math.round(Math.random() * 1000)
+        };
+    
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(json)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error.message); // Выводим ошибку, если она есть
+            } else {
+                alert('Офис успешно освобожден!');
+                getOfficeList(); // Обновить список офисов
+            }
+        });
+    }
+    
     document.addEventListener('DOMContentLoaded', function () {
         getOfficeList();
     });
+    
 </script>
 {% endblock %}
+
 {% block content %}
 <div class="auth-links">
     <a href="{{ url_for('lab5.register') }}">Регистрация</a>
