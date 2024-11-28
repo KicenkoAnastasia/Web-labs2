@@ -1,0 +1,163 @@
+<!-- lab6.html -->
+{% extends "base.html" %}
+{% block lab %}Лабораторная работа 6{% endblock %}
+{% block head %}
+<style>
+    body {
+        background-color: #3a536b;
+        color: white;
+        text-align: center;
+    }
+    header, main {
+        margin: 0 auto;
+        max-width: 800px;
+    }
+    footer {
+        text-align: right;
+        color: white;
+        background-color: #3a536b;
+    }
+    ul#office-list {
+        list-style: none;
+        padding: 0;
+        text-align: right; 
+    }
+    ul#office-list li {
+        margin: 5px 0;
+        font-size: 18px;
+        display: flex; 
+        justify-content: space-between;
+        align-items: center; 
+    }
+    .knopk {
+        padding: 10px 20px;
+        background-color: #ff5a7d; 
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        margin-left: 10px; 
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .knopk:hover {
+        background-color: #d24665; 
+        transform: scale(1.05); 
+    }
+
+    .knopk:active {
+        background-color: #d24665; 
+    }
+    .auth-links {
+        display: flex; 
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px; 
+    }
+
+    .auth-links a {
+        color: white;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        background-color: #ff5a7d; 
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .auth-links a:hover {
+        background-color: #ff5a7d; 
+        transform: scale(1.05);
+    }
+
+    .auth-links a:active {
+        background-color: #d24665;
+    }
+</style>
+{% endblock %}
+{% block script %}
+<script>
+    function getOfficeList() {
+        const url = '/lab6/json-rps-api';
+        const json = {
+            'jsonrpc': '2.0',
+            'method': 'info',
+            'id': Math.round(Math.random() * 1000)
+        };
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(json)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const officeList = data.result;
+            const ul = document.getElementById('office-list');
+            ul.innerHTML = ''; // Clear the existing list
+            officeList.forEach(office => {
+                const li = document.createElement('li');
+                li.innerText = `${office.number}: ${office.tenant || 'Свободен'}`;
+                
+                const bookingButton = document.createElement('button');
+                bookingButton.innerText = 'Зарезервировать';
+                bookingButton.classList.add('knopk'); // Добавляем класс "knopk"
+                bookingButton.onclick = function() {
+                    booking(office.number);
+                };
+                
+                li.appendChild(bookingButton);
+                ul.appendChild(li);
+            });
+        });
+    }
+
+    function booking(officeNumber) {
+        const url = '/lab6/json-rps-api';
+        const json = {
+            'jsonrpc': '2.0',
+            'method': 'booking',
+            'params': officeNumber,
+            'id': Math.round(Math.random() * 1000)
+        };
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(json)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                switch (data.error.code) {
+                    case 1:
+                        alert('Вы не авторизованы, пожалуйста, авторизуйтесь');
+                        break;
+                    case 2:
+                        alert('Офис уже арендуется');
+                        break;
+                    case -32601:
+                        alert('Метод не найден');
+                        break;
+                    default:
+                        alert('Неизвестная ошибка');
+                }
+            } else {
+                alert('Офис успешно забронирован!');
+                getOfficeList();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        getOfficeList();
+    });
+</script>
+{% endblock %}
+{% block content %}
+<div class="auth-links">
+    <a href="{{ url_for('lab5.register') }}">Регистрация</a>
+    <a href="{{ url_for('lab5.login') }}">Вход</a>
+    <a href="{{ url_for('lab5.logout') }}">Выход</a>
+</div>
+<h1>Список кабинетов</h1>
+<ul id="office-list"></ul>
+{% endblock %}
