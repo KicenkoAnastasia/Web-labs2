@@ -90,13 +90,14 @@
         })
         .then(response => response.json())
         .then(data => {
-            const officeList = data.result;
+            const officeList = data.result.offices;
+            const totalRent = data.result.total_rent;
             const ul = document.getElementById('office-list');
             ul.innerHTML = ''; // Clear the existing list
     
             officeList.forEach(office => {
                 const li = document.createElement('li');
-                li.innerText = `${office.number}: ${office.tenant || 'Свободен'}`;
+                li.innerText = `${office.number}: ${office.tenant || 'Свободен'} | Цена: ${office.price} руб.`;
     
                 // Кнопка для бронирования
                 const bookingButton = document.createElement('button');
@@ -120,6 +121,10 @@
     
                 ul.appendChild(li);
             });
+
+            // Отображение общей стоимости аренды
+            const totalRentDiv = document.getElementById('total-rent');
+            totalRentDiv.innerHTML = `Общая стоимость аренды: ${totalRent} руб.`;
         });
     }
     
@@ -164,7 +169,7 @@
         const url = '/lab6/json-rps-api';
         const json = {
             'jsonrpc': '2.0',
-            'method': 'cancelation',  // Новый метод для снятия аренды
+            'method': 'cancelation',
             'params': officeNumber,
             'id': Math.round(Math.random() * 1000)
         };
@@ -188,7 +193,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         getOfficeList();
     });
-    
 </script>
 {% endblock %}
 
@@ -200,4 +204,5 @@
 </div>
 <h1>Список кабинетов</h1>
 <ul id="office-list"></ul>
+<div id="total-rent"></div> 
 {% endblock %}
