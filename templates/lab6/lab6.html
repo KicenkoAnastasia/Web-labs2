@@ -90,6 +90,10 @@
         })
         .then(response => response.json())
         .then(data => {
+            if (!data.result) {
+                alert('Ошибка при загрузке списка офисов!');
+                return;
+            }
             const officeList = data.result.offices;
             const totalRent = data.result.total_rent;
             const ul = document.getElementById('office-list');
@@ -100,13 +104,15 @@
                 li.innerText = `${office.number}: ${office.tenant || 'Свободен'} | Цена: ${office.price} руб.`;
     
                 // Кнопка для бронирования
-                const bookingButton = document.createElement('button');
-                bookingButton.innerText = 'Зарезервировать';
-                bookingButton.classList.add('knopk'); // Добавляем класс "knopk"
-                bookingButton.onclick = function() {
-                    booking(office.number);
-                };
-                li.appendChild(bookingButton);
+                if (!office.tenant) {
+                    const bookingButton = document.createElement('button');
+                    bookingButton.innerText = 'Зарезервировать';
+                    bookingButton.classList.add('knopk'); // Добавляем класс "knopk"
+                    bookingButton.onclick = function() {
+                        booking(office.number);
+                    };
+                    li.appendChild(bookingButton);
+                }
     
                 // Кнопка для освобождения
                 if (office.tenant) {
@@ -125,6 +131,10 @@
             // Отображение общей стоимости аренды
             const totalRentDiv = document.getElementById('total-rent');
             totalRentDiv.innerHTML = `Общая стоимость аренды: ${totalRent} руб.`;
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки:', error);
+            alert('Произошла ошибка при загрузке данных.');
         });
     }
     
@@ -145,19 +155,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                switch (data.error.code) {
-                    case 1:
-                        alert('Вы не авторизованы, пожалуйста, авторизуйтесь');
-                        break;
-                    case 2:
-                        alert('Офис уже арендуется');
-                        break;
-                    case -32601:
-                        alert('Метод не найден');
-                        break;
-                    default:
-                        alert('Неизвестная ошибка');
-                }
+                alert(data.error.message || 'Ошибка бронирования');
             } else {
                 alert('Офис успешно забронирован!');
                 getOfficeList(); // Обновить список офисов
@@ -182,7 +180,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert(data.error.message); // Выводим ошибку, если она есть
+                alert(data.error.message || 'Ошибка отмены бронирования');
             } else {
                 alert('Офис успешно освобожден!');
                 getOfficeList(); // Обновить список офисов

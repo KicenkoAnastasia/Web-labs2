@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, session, url_for
+# lab5.py
+from flask import Blueprint, render_template, request, redirect, session, url_for, current_app
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
 from os import path
-from flask import current_app
 
 lab5 = Blueprint('lab5', __name__)
 
@@ -20,7 +20,7 @@ def db_connect():
         )
         cur = conn.cursor(cursor_factory=RealDictCursor)
     else:
-        dir_path = path.dirname(path.realpath(__file__))  # Исправлено на __file__
+        dir_path = path.dirname(path.realpath(__file__))
         db_path = path.join(dir_path, "database.db")
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
@@ -30,16 +30,15 @@ def db_connect():
 # Функция для закрытия соединения с базой данных
 def db_close(conn, cur):
     try:
-        if conn and not conn.closed:
-            conn.commit()  # Применяем изменения, если необходимо
+        if conn:
+            conn.commit()
     except psycopg2.InterfaceError:
-        # Игнорируем ошибку, если соединение уже закрыто
         pass
     finally:
         if cur:
-            cur.close()  # Закрываем курсор
-        if conn and not conn.closed:
-            conn.close()  # Закрываем соединение
+            cur.close()
+        if conn:
+            conn.close()
 
 @lab5.route('/lab5/')
 def lab():
@@ -57,21 +56,16 @@ def register():
         return render_template('lab5/register.html', error='Заполните все поля')
 
     conn, cur = db_connect()
-
     try:
-        # Проверка, существует ли пользователь
         cur.execute("SELECT login FROM users WHERE login = %s;", (login,))
         if cur.fetchone():
-            db_close(conn, cur)
             return render_template('lab5/register.html', error="Такой пользователь уже существует")
 
-        # Хеширование пароля и создание пользователя
         password_hash = generate_password_hash(password)
         cur.execute("INSERT INTO users (login, password) VALUES (%s, %s);", (login, password_hash))
     finally:
         db_close(conn, cur)
 
-    # После успешной регистрации перенаправляем на страницу входа
     return redirect(url_for('lab5.login'))
 
 @lab5.route('/lab5/login', methods=['GET', 'POST'])
@@ -87,8 +81,7 @@ def login():
 
     conn, cur = db_connect()
     try:
-        # Проверка наличия пользователя
-        cur.execute("SELECT * FROM users WHERE login = %s;", (login,))
+        cur.execute("SELECT * FROM users WHERE login = %s;", (login,)) #проверка результатов
         user = cur.fetchone()
 
         if not user or not check_password_hash(user['password'], password):
@@ -98,141 +91,144 @@ def login():
     finally:
         db_close(conn, cur)
 
-    # После успешного входа перенаправляем на главную страницу
     return redirect(url_for('lab5.lab'))
 
 @lab5.route('/lab5/logout')
 def logout():
-    session.pop('login', None)
+    session.pop('login', None) #удаляет из сессии запись о текущем пользователе (если она есть). 
     return redirect(url_for('lab5.lab'))
 
 @lab5.route('/lab5/create', methods=['GET', 'POST'])
 def create():
     login = session.get('login')
     if not login:
-        return redirect('/lab5/login')
+        return redirect(url_for('lab5.login'))
 
     if request.method == 'POST':
         title = request.form.get('title')
         article_text = request.form.get('article_text')
 
-        # Валидация данных
         if not title or not article_text:
             return render_template('lab5/create_article.html', error="Название и текст статьи не могут быть пустыми.")
 
         conn, cur = db_connect()
         try:
-            # Получение ID пользователя
             cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
             user = cur.fetchone()
             if not user:
-                return redirect('/lab5/login')
+                return redirect(url_for('lab5.login'))
 
             login_id = user["id"]
-            # Вставка новой статьи
-            cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", 
+            cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", #запрос к базе данных
                         (login_id, title, article_text))
         finally:
             db_close(conn, cur)
 
-        return redirect('/lab5')
+        return redirect(url_for('lab5.list_articles'))
 
     return render_template('lab5/create_article.html')
 
-
 @lab5.route('/lab5/list')
 def list_articles():
-    # Получаем все статьи (в том числе публичные)
     conn, cur = db_connect()
     try:
-        # Получаем все статьи
         cur.execute("""
             SELECT * FROM articles 
-            ORDER BY is_favorite DESC;
+            ORDER BY is_favorite DESC, id DESC;
         """)
         articles = cur.fetchall()
-
-        if not articles:
-            return render_template('/lab5/articles.html', message="Нет статей.")
-
     finally:
         db_close(conn, cur)
 
     return render_template('/lab5/articles.html', articles=articles)
 
-
 @lab5.route('/lab5/delete/<int:article_id>', methods=['POST'])
 def delete_article(article_id):
     login = session.get('login')
     if not login:
-        return redirect('/lab5/login')
+        return redirect(url_for('lab5.login'))
 
     conn, cur = db_connect()
     try:
-        # Получаем статью по ID
         cur.execute("SELECT * FROM articles WHERE id = %s;", (article_id,))
         article = cur.fetchone()
 
         if not article:
-            return redirect('/lab5/list')
+            return redirect(url_for('lab5.list_articles'))
 
-        # Проверяем, что статья принадлежит текущему пользователю
         cur.execute("SELECT id FROM users WHERE login = %s;", (login,))
         user = cur.fetchone()
-        
+
         if article['user_id'] != user['id']:
-            return redirect('/lab5/list')
+            return redirect(url_for('lab5.list_articles'))
 
-        # Удаляем статью
         cur.execute("DELETE FROM articles WHERE id = %s;", (article_id,))
-        conn.commit()
-
-        return redirect('/lab5/list')
     finally:
         db_close(conn, cur)
 
+    return redirect(url_for('lab5.list_articles'))
 
 @lab5.route('/lab5/edit/<int:article_id>', methods=['GET', 'POST'])
 def edit_article(article_id):
     login = session.get('login')
     if not login:
-        return redirect('/lab5/login')
+        return redirect(url_for('lab5.login'))
 
     conn, cur = db_connect()
     try:
-        # Получаем статью по ID
         cur.execute("SELECT * FROM articles WHERE id = %s;", (article_id,))
         article = cur.fetchone()
 
         if not article:
-            return redirect('/lab5/list')
+            return redirect(url_for('lab5.list_articles'))
 
-        # Проверяем, что статья принадлежит текущему пользователю
         cur.execute("SELECT id FROM users WHERE login = %s;", (login,))
         user = cur.fetchone()
-        
+
         if article['user_id'] != user['id']:
-            return redirect('/lab5/list')
+            return redirect(url_for('lab5.list_articles'))
 
         if request.method == 'POST':
             title = request.form.get('title')
             article_text = request.form.get('article_text')
 
-            # Валидация данных
             if not title or not article_text:
                 return render_template('lab5/edit_article.html', article=article, error="Название и текст статьи не могут быть пустыми.")
 
-            # Обновляем статью в базе данных
-            cur.execute("UPDATE articles SET title = %s, article_text = %s WHERE id = %s;", 
+            cur.execute("UPDATE articles SET title = %s, article_text = %s WHERE id = %s;",
                         (title, article_text, article_id))
-            conn.commit()
+            return redirect(url_for('lab5.list_articles'))
 
-            return redirect('/lab5/list')
-
-        # Отображаем форму редактирования с текущими данными статьи
         return render_template('lab5/edit_article.html', article=article)
     finally:
         db_close(conn, cur)
+
+@lab5.route('/lab5/toggle_favorite/<int:article_id>', methods=['POST'])
+def toggle_favorite(article_id):
+    login = session.get('login')
+    if not login:
+        return redirect(url_for('lab5.login'))
+
+    conn, cur = db_connect()
+    try:
+        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
+        user = cur.fetchone()
+
+        if not user:
+            return redirect(url_for('lab5.login'))
+
+        cur.execute("SELECT * FROM articles WHERE id = %s;", (article_id,))
+        article = cur.fetchone()
+
+        if not article or article['user_id'] != user['id']:
+            return redirect(url_for('lab5.list_articles'))
+
+        new_favorite_status = not article['is_favorite']
+        cur.execute("UPDATE articles SET is_favorite = %s WHERE id = %s;", (new_favorite_status, article_id))
+    finally:
+        db_close(conn, cur)
+
+    return redirect(url_for('lab5.list_articles'))
 
 
 @lab5.route('/lab5/users')
@@ -240,58 +236,11 @@ def list_users():
     login = session.get('login')
     if not login:
         return redirect('/lab5/login')
-
     conn, cur = db_connect()
-    try:
-        # Получаем список логинов всех пользователей
-        cur.execute("SELECT login FROM users;")
-        users = cur.fetchall()
-    finally:
-        db_close(conn, cur)
+# список логинов всех пользователей
+    cur.execute("SELECT login FROM users;")
+    users = cur.fetchall()
+
+    db_close(conn, cur)
 
     return render_template('/lab5/users.html', users=users)
-
-@lab5.route('/lab5/public_articles')
-def public_articles():
-    conn, cur = db_connect()
-    try:
-        cur.execute("SELECT title, article_text, user_id FROM articles WHERE is_public = TRUE;")
-        public_articles = cur.fetchall()
-    finally:
-        db_close(conn, cur)
-
-    return render_template('/lab5/public_articles.html', articles=public_articles)
-
-
-
-
-    #доп задание, добавление в любимые 
-@lab5.route('/lab5/toggle_favorite/<int:article_id>', methods=['POST'])
-def toggle_favorite(article_id):
-    login = session.get('login')
-    if not login:
-        return redirect('/lab5/login')
-
-    conn, cur = db_connect()
-    try:
-        # Получаем ID пользователя
-        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
-        user = cur.fetchone()
-        if not user:
-            return redirect('/lab5/login')
-
-        # Проверяем, что статья принадлежит текущему пользователю
-        cur.execute("SELECT * FROM articles WHERE id = %s;", (article_id,))
-        article = cur.fetchone()
-
-        if not article or article['user_id'] != user['id']:
-            return redirect('/lab5/list')
-
-        # Переключаем статус "любимой" статьи
-        new_favorite_status = not article['is_favorite']
-        cur.execute("UPDATE articles SET is_favorite = %s WHERE id = %s;", (new_favorite_status, article_id))
-        conn.commit()
-    finally:
-        db_close(conn, cur)
-
-    return redirect(url_for('lab5.list_articles'))
