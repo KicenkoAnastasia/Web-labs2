@@ -3,22 +3,30 @@
 
 {% block lab %}Лабораторная работа 6{% endblock %}
 
+
 {% block head %}
 <style>
+
     body {
         background-color: #3a536b;
         color: white;
         text-align: center;
     }
+
+    
     header, main {
         margin: 0 auto;
         max-width: 800px;
     }
+
+
     footer {
         text-align: right;
         color: white;
         background-color: #3a536b;
     }
+
+
     ul#office-list {
         list-style: none;
         padding: 0;
@@ -31,6 +39,7 @@
         justify-content: space-between;
         align-items: center;
     }
+
     .knopk {
         padding: 10px 20px;
         background-color: #ff5a7d;
@@ -49,6 +58,8 @@
     .knopk:active {
         background-color: #d24665;
     }
+
+
     .auth-links {
         display: flex;
         justify-content: center;
@@ -73,59 +84,64 @@
 </style>
 {% endblock %}
 
+<!-- Скрипты для работы с API -->
 {% block script %}
 <script>
+    // Функция для получения списка офисов
     function getOfficeList() {
-        const url = '/lab6/json-rps-api';
+        const url = '/lab6/json-rps-api'; // URL для запроса
         const json = {
             'jsonrpc': '2.0',
-            'method': 'info',
-            'id': Math.round(Math.random() * 1000)
+            'method': 'info', // Метод API
+            'id': Math.round(Math.random() * 1000) // случайное число от 0 до 1000
         };
-    
+
+        // Запрос на сервер для получения данных
         fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(json)
         })
-        .then(response => response.json())
+        .then(response => response.json()) // Преобразование ответа в JSON
         .then(data => {
             if (!data.result) {
                 alert('Ошибка при загрузке списка офисов!');
                 return;
             }
+
+            // Извлечение списка офисов и общей стоимости аренды
             const officeList = data.result.offices;
             const totalRent = data.result.total_rent;
             const ul = document.getElementById('office-list');
-            ul.innerHTML = ''; // Clear the existing list
-    
+            ul.innerHTML = ''; 
+
+            // Обработка каждого офиса
             officeList.forEach(office => {
                 const li = document.createElement('li');
                 li.innerText = `${office.number}: ${office.tenant || 'Свободен'} | Цена: ${office.price} руб.`;
-    
-                // Кнопка для бронирования
+                // Если офис свободен, то кнопка - "Зарезервировать"
                 if (!office.tenant) {
                     const bookingButton = document.createElement('button');
                     bookingButton.innerText = 'Зарезервировать';
-                    bookingButton.classList.add('knopk'); // Добавляем класс "knopk"
+                    bookingButton.classList.add('knopk');
                     bookingButton.onclick = function() {
                         booking(office.number);
                     };
                     li.appendChild(bookingButton);
                 }
-    
-                // Кнопка для освобождения
+
+                // Если офис занят, то кнопка "Освободить"
                 if (office.tenant) {
                     const cancelButton = document.createElement('button');
                     cancelButton.innerText = 'Освободить';
-                    cancelButton.classList.add('knopk'); // Кнопка с тем же стилем
+                    cancelButton.classList.add('knopk');
                     cancelButton.onclick = function() {
                         cancelBooking(office.number);
                     };
                     li.appendChild(cancelButton);
                 }
-    
-                ul.appendChild(li);
+
+                ul.appendChild(li); // Добавление элемента в список
             });
 
             // Отображение общей стоимости аренды
@@ -137,7 +153,8 @@
             alert('Произошла ошибка при загрузке данных.');
         });
     }
-    
+
+    // Функция бронирования офиса  ___________________________________________________
     function booking(officeNumber) {
         const url = '/lab6/json-rps-api';
         const json = {
@@ -146,7 +163,8 @@
             'params': officeNumber,
             'id': Math.round(Math.random() * 1000)
         };
-    
+
+        // Отправка запроса на бронирование
         fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -158,20 +176,22 @@
                 alert(data.error.message || 'Ошибка бронирования');
             } else {
                 alert('Офис успешно забронирован!');
-                getOfficeList(); // Обновить список офисов
+                getOfficeList(); // Обновление списка
             }
         });
     }
-    
+
+    // Функция отмены бронирования
     function cancelBooking(officeNumber) {
         const url = '/lab6/json-rps-api';
         const json = {
             'jsonrpc': '2.0',
             'method': 'cancelation',
-            'params': officeNumber,
+            'params': officeNumber, // Номер офиса
             'id': Math.round(Math.random() * 1000)
         };
-    
+
+        // Отправка запроса на отмену бронирования
         fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -183,23 +203,28 @@
                 alert(data.error.message || 'Ошибка отмены бронирования');
             } else {
                 alert('Офис успешно освобожден!');
-                getOfficeList(); // Обновить список офисов
+                getOfficeList(); // Обновление списка
             }
         });
     }
-    
+
+    // Запуск функции после загрузки страницы
     document.addEventListener('DOMContentLoaded', function () {
         getOfficeList();
     });
 </script>
 {% endblock %}
 
+
 {% block content %}
 <div class="auth-links">
+
     <a href="{{ url_for('lab5.register') }}">Регистрация</a>
     <a href="{{ url_for('lab5.login') }}">Вход</a>
     <a href="{{ url_for('lab5.logout') }}">Выход</a>
 </div>
+
+<!-- Заголовок и список офисов -->
 <h1>Список кабинетов</h1>
 <ul id="office-list"></ul>
 <div id="total-rent"></div> 

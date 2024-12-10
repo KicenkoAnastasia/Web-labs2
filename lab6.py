@@ -17,9 +17,9 @@ def api():
     data = request.json
     id = data.get('id')
 
-    # Метод info: возвращаем список офисов и общую стоимость аренды
+    # Метод info:  список офисов и общую стоимость аренды
     if data.get('method') == 'info':
-        # Подсчитываем общую стоимость аренды
+        #  общая аренды
         total_rent = sum(office['price'] for office in offices if office['tenant'])
         return {
             'jsonrpc': '2.0',
