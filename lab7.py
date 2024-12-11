@@ -79,3 +79,18 @@ def put_series(id):
     # Обновление записи
     series[id] = series_item
     return series[id], 200
+
+@lab7.route('/lab7/rest-api/series/', methods=['POST'])
+def add_film():
+    # Получение данных нового фильма из тела запроса
+    new_series = request.get_json()
+
+    # Проверка корректности данных
+    if not new_series or not all(key in new_series for key in ["title", "title_ru", "year", "description"]):
+        return {"error": "Invalid data provided"}, 400
+
+    # Добавление нового фильма в конец списка
+    series.append(new_series)
+
+    # Возвращаем индекс нового фильма
+    return {"id": len(series) - 1}, 201
