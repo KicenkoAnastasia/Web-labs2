@@ -29,6 +29,10 @@
     th {
         background-color: #004080;
     }
+    td.italic {
+        font-style: italic;
+        color: #bbbbbb;
+    }
     footer, header {
         background-color: #00274d;
     }
@@ -49,76 +53,40 @@
         z-index: 100;
         box-shadow: 3px 3px 5px black;
         background: rgb(208, 163, 186);
-        width: 600px; /* Ширина модального окна */
+        width: 600px;
         color: #00274d;
         left: 50%;
         top: 220px;
-        margin-left: -300px; /* Центрирование модального окна */
+        margin-left: -300px;
         position: absolute;
         padding: 20px;
         font-weight: bold;
         display: none;
         flex-direction: column;
-        gap: 20px; /* Расстояние между элементами */
+        gap: 20px;
         font-size: 15px;
-        border-radius: 10px; /* Радиус углов */
+        border-radius: 10px;
     }
-    
     .modal label {
         display: flex;
-        flex-direction: column; /* Текст метки располагается над полем ввода */
+        flex-direction: column;
         align-items: flex-start;
         width: 100%;
-        margin-bottom: 10px; /* Отступ между метками */
-        font-size: 14px; /* Размер шрифта для меток */
+        margin-bottom: 10px;
     }
-    
-    .modal input,
-    .modal textarea {
-        width: 100%; /* Поля ввода занимают всю ширину контейнера */
+    .modal input, .modal textarea {
+        width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
-        font-size: 14px;
-        background: #fdfdfd; /* Светлый фон для ввода */
-        color: #00274d;
-        margin-top: 5px; /* Отступ между меткой и полем ввода */
-        box-sizing: border-box; /* Учитываем padding в ширину */
     }
-    
-    .modal button {
-        width: 120px; /* Фиксированная ширина кнопок */
-        padding: 10px;
-        background-color: #ffc0cb;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        align-self: center; /* Центрирование кнопок */
-    }
-    
-    .modal button:hover {
-        background-color: #ff99aa; /* Цвет кнопки при наведении */
-    }
-    
-    .modal .button-container {
-        display: flex;
-        justify-content: space-between; /* Разделяем кнопки */
-        margin-top: 20px; /* Отступ сверху для кнопок */
-    }
-    
-    .modal .error-message {
-        color: red;
-        font-size: 14px;
-        margin-top: -10px; /* Слегка поднимаем сообщение об ошибке */
-        text-align: left;
-    }
-    
     .error-message {
         color: red;
         font-size: 14px;
-        margin-top: -5px;
+    }
+    td.italic {
+        font-style: italic;
+        color: #bbbbbb;
     }
 </style>
 
@@ -127,8 +95,8 @@
 <table>
     <thead>
         <tr>
-            <th>Название</th>
             <th>Название (рус)</th>
+            <th>Оригинальное название</th>
             <th>Год</th>
             <th>Действие</th>
         </tr>
@@ -149,8 +117,10 @@
         <textarea id="description"></textarea>
     </label>
     <div id="description-error" class="error-message"></div>
-    <button onclick="sendSeries()">OK</button>
-    <button onclick="cancel()">Отмена</button>
+    <div class="button-container">
+        <button onclick="sendSeries()">OK</button>
+        <button onclick="cancel()">Отмена</button>
+    </div>
 </div>
 
 <script>

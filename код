@@ -1,218 +1,3 @@
-# lab7.py
-from flask import Blueprint, render_template, request, jsonify
-
-lab7 = Blueprint('lab7', __name__)
-
-@lab7.route('/lab7/')
-def main():
-    return render_template('lab7/index.html')
-
-series = [
-    {
-        "title": "Lost",
-        "title_ru": "Остаться вживых",
-        "year": "2004–2010",
-        "description": "Красавец-лайнер, совершающий полет из Сиднея в Лос-Анджелес...",
-    },
-    {
-        "title": "Grotesquerie",
-        "title_ru": "Гротеск",
-        "year": "2024",
-        "description": "Сестра Меган и детектив Лоис Трион расследуют серию...",
-    }
-]
-
-@lab7.route('/lab7/rest-api/series/', methods=['GET'])
-def get_series():
-    return jsonify({"series": [{"id": idx, **item} for idx, item in enumerate(series)]})
-
-@lab7.route('/lab7/rest-api/series/<int:id>', methods=['DELETE'])
-def delete_series(id):
-    if 0 <= id < len(series):
-        del series[id]
-        return '', 204
-    return jsonify({"error": "Series not found"}), 404
-
-@lab7.route('/lab7/rest-api/series/', methods=['POST'])
-def add_series():
-    new_series = request.get_json()
-    if not all(key in new_series for key in ["title", "title_ru", "year", "description"]):
-        return jsonify({"error": "Invalid data"}), 400
-    series.append(new_series)
-    return jsonify({"id": len(series) - 1}), 201
-
-@lab7.route('/lab7/rest-api/series/<int:id>', methods=['PUT'])
-def update_series(id):
-    if id < 0 or id >= len(series):
-        return jsonify({"error": "Series not found"}), 404
-    updated_series = request.get_json()
-    if not all(key in updated_series for key in ["title", "title_ru", "year", "description"]):
-        return jsonify({"error": "Invalid data"}), 400
-    series[id] = updated_series
-    return jsonify(series[id]), 200
-
-<!-- index.html -->
-{% extends "base.html" %}
-
-{% block lab %}
-Лабораторная работа-7
-{% endblock %}
-
-{% block script %}
-<script src="{{ url_for('static', filename='lab7/main.js') }}"></script>
-{% endblock %}
-
-{% block content %}
-<style>
-    body {
-        background-color: #00274d;
-        color: white;
-        font-family: Arial, sans-serif;
-    }
-    table {
-        width: 100%;
-        margin: 20px 0;
-        border-collapse: collapse;
-    }
-    th, td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ffffff;
-    }
-    th {
-        background-color: #004080;
-    }
-    footer, header {
-        background-color: #00274d;
-    }
-    button {
-        background-color: #ffc0cb;
-        border: none;
-        padding: 10px 15px;
-        margin: 5px;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 14px;
-        font-weight: bold;
-    }
-    button:hover {
-        background-color: #ff99aa;
-    }
-    .modal {
-        z-index: 100;
-        box-shadow: 3px 3px 5px black;
-        background: rgb(208, 163, 186);
-        width: 600px; /* Ширина модального окна */
-        color: #00274d;
-        left: 50%;
-        top: 220px;
-        margin-left: -300px; /* Центрирование модального окна */
-        position: absolute;
-        padding: 20px;
-        font-weight: bold;
-        display: none;
-        flex-direction: column;
-        gap: 20px; /* Расстояние между элементами */
-        font-size: 15px;
-        border-radius: 10px; /* Радиус углов */
-    }
-    
-    .modal label {
-        display: flex;
-        flex-direction: column; /* Текст метки располагается над полем ввода */
-        align-items: flex-start;
-        width: 100%;
-        margin-bottom: 10px; /* Отступ между метками */
-        font-size: 14px; /* Размер шрифта для меток */
-    }
-    
-    .modal input,
-    .modal textarea {
-        width: 100%; /* Поля ввода занимают всю ширину контейнера */
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 14px;
-        background: #fdfdfd; /* Светлый фон для ввода */
-        color: #00274d;
-        margin-top: 5px; /* Отступ между меткой и полем ввода */
-        box-sizing: border-box; /* Учитываем padding в ширину */
-    }
-    
-    .modal button {
-        width: 120px; /* Фиксированная ширина кнопок */
-        padding: 10px;
-        background-color: #ffc0cb;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        align-self: center; /* Центрирование кнопок */
-    }
-    
-    .modal button:hover {
-        background-color: #ff99aa; /* Цвет кнопки при наведении */
-    }
-    
-    .modal .button-container {
-        display: flex;
-        justify-content: space-between; /* Разделяем кнопки */
-        margin-top: 20px; /* Отступ сверху для кнопок */
-    }
-    
-    .modal .error-message {
-        color: red;
-        font-size: 14px;
-        margin-top: -10px; /* Слегка поднимаем сообщение об ошибке */
-        text-align: left;
-    }
-    
-    .error-message {
-        color: red;
-        font-size: 14px;
-        margin-top: -5px;
-    }
-</style>
-
-<h1>Список сериалов</h1>
-
-<table>
-    <thead>
-        <tr>
-            <th>Название</th>
-            <th>Название (рус)</th>
-            <th>Год</th>
-            <th>Действие</th>
-        </tr>
-    </thead>
-    <tbody id="series-list"></tbody>
-</table>
-
-<div>
-    <button onclick="addSeries()">Добавить сериал</button>
-</div>
-
-<div class="modal">
-    <input type="hidden" id="id">
-    <label>Название сериала на русском: <input type="text" id="title-ru"></label>
-    <label>Название сериала на оригинальном языке (если русский, оставьте пустым): <input type="text" id="title"></label>
-    <label>Год выпуска: <input type="number" id="year"></label>
-    <label>Описание: 
-        <textarea id="description"></textarea>
-    </label>
-    <div id="description-error" class="error-message"></div>
-    <button onclick="sendSeries()">OK</button>
-    <button onclick="cancel()">Отмена</button>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        FillSeriesList();
-    });
-</script>
-{% endblock %}
-
 // main.js
 function FillSeriesList() {
     fetch('/lab7/rest-api/series/')
@@ -226,15 +11,22 @@ function FillSeriesList() {
             series.forEach(seriesItem => {
                 let tr = document.createElement('tr');
 
-                let tdTitle = document.createElement('td');
-                let tdTitleRus = document.createElement('td');
-                let tdYear = document.createElement('td');
-                let tdActions = document.createElement('td');
 
-                tdTitle.innerText = seriesItem.title || 'N/A';
+                let tdTitleRus = document.createElement('td');
                 tdTitleRus.innerText = seriesItem.title_ru || 'N/A';
+
+                let tdTitle = document.createElement('td');
+                tdTitle.classList.add('italic'); 
+                tdTitle.innerHTML = seriesItem.title
+                    ? `(${seriesItem.title})` 
+                    : '(N/A)'; 
+
+    
+                let tdYear = document.createElement('td');
                 tdYear.innerText = seriesItem.year || 'N/A';
 
+              
+                let tdActions = document.createElement('td');
                 let editButton = document.createElement('button');
                 editButton.innerText = 'редактировать';
                 editButton.onclick = function () {
@@ -248,13 +40,13 @@ function FillSeriesList() {
                 };
 
                 tdActions.append(editButton, deleteButton);
-                tr.append(tdTitle, tdTitleRus, tdYear, tdActions);
+
+                tr.append(tdTitleRus, tdTitle, tdYear, tdActions);
                 tbody.append(tr);
             });
         })
         .catch(error => console.error('Error fetching series:', error));
 }
-
 function deleteSeries(id) {
     if (!confirm('Вы точно хотите удалить сериал?')) return;
 
@@ -273,7 +65,7 @@ function showModal() {
     document.getElementById('title-ru').value = '';
     document.getElementById('year').value = '';
     document.getElementById('description').value = '';
-    document.getElementById('description-error').textContent = ''; // Очистка ошибки
+    document.getElementById('description-error').textContent = ''; 
 }
 
 function hideModal() {
@@ -336,3 +128,190 @@ function editSeries(series) {
     document.getElementById('year').value = series.year;
     document.getElementById('description').value = series.description;
 }
+<!-- index.html -->
+{% extends "base.html" %}
+
+{% block lab %}
+Лабораторная работа-7
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='lab7/main.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #00274d;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    table {
+        width: 100%;
+        margin: 20px 0;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ffffff;
+    }
+    th {
+        background-color: #004080;
+    }
+    td.italic {
+        font-style: italic;
+        color: #bbbbbb;
+    }
+    footer, header {
+        background-color: #00274d;
+    }
+    button {
+        background-color: #ffc0cb;
+        border: none;
+        padding: 10px 15px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    button:hover {
+        background-color: #ff99aa;
+    }
+    .modal {
+        z-index: 100;
+        box-shadow: 3px 3px 5px black;
+        background: rgb(208, 163, 186);
+        width: 600px;
+        color: #00274d;
+        left: 50%;
+        top: 220px;
+        margin-left: -300px;
+        position: absolute;
+        padding: 20px;
+        font-weight: bold;
+        display: none;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+    .modal label {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .modal input, .modal textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .error-message {
+        color: red;
+        font-size: 14px;
+    }
+    td.italic {
+        font-style: italic;
+        color: #bbbbbb;
+    }
+</style>
+
+<h1>Список сериалов</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Название (рус)</th>
+            <th>Оригинальное название</th>
+            <th>Год</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody id="series-list"></tbody>
+</table>
+
+<div>
+    <button onclick="addSeries()">Добавить сериал</button>
+</div>
+
+<div class="modal">
+    <input type="hidden" id="id">
+    <label>Название сериала на русском: <input type="text" id="title-ru"></label>
+    <label>Название сериала на оригинальном языке (если русский, оставьте пустым): <input type="text" id="title"></label>
+    <label>Год выпуска: <input type="number" id="year"></label>
+    <label>Описание: 
+        <textarea id="description"></textarea>
+    </label>
+    <div id="description-error" class="error-message"></div>
+    <div class="button-container">
+        <button onclick="sendSeries()">OK</button>
+        <button onclick="cancel()">Отмена</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        FillSeriesList();
+    });
+</script>
+{% endblock %}
+# lab7.py
+from flask import Blueprint, render_template, request, jsonify
+
+lab7 = Blueprint('lab7', __name__)
+
+@lab7.route('/lab7/')
+def main():
+    return render_template('lab7/index.html')
+
+series = [
+    {
+        "title": "Lost",
+        "title_ru": "Остаться вживых",
+        "year": "2004–2010",
+        "description": "Красавец-лайнер, совершающий полет из Сиднея в Лос-Анджелес...",
+    },
+    {
+        "title": "Grotesquerie",
+        "title_ru": "Гротеск",
+        "year": "2024",
+        "description": "Сестра Меган и детектив Лоис Трион расследуют серию...",
+    }
+]
+
+@lab7.route('/lab7/rest-api/series/', methods=['GET'])
+def get_series():
+    return jsonify({"series": [{"id": idx, **item} for idx, item in enumerate(series)]})
+
+@lab7.route('/lab7/rest-api/series/<int:id>', methods=['DELETE'])
+def delete_series(id):
+    if 0 <= id < len(series):
+        del series[id]
+        return '', 204
+    return jsonify({"error": "Series not found"}), 404
+
+@lab7.route('/lab7/rest-api/series/', methods=['POST'])
+def add_series():
+    new_series = request.get_json()
+    if not all(key in new_series for key in ["title_ru", "year", "description"]):
+        return jsonify({"error": "Invalid data"}), 400
+    if not new_series.get("title"): 
+        new_series["title"] = new_series["title_ru"] # самостоятельное задание: копируем русское название, если оригинальное пустое
+    series.append(new_series)
+    return jsonify({"id": len(series) - 1}), 201
+
+@lab7.route('/lab7/rest-api/series/<int:id>', methods=['PUT'])
+def update_series(id):
+    if id < 0 or id >= len(series):
+        return jsonify({"error": "Series not found"}), 404
+    updated_series = request.get_json()
+    if not all(key in updated_series for key in ["title_ru", "year", "description"]):
+        return jsonify({"error": "Invalid data"}), 400
+    if not updated_series.get("title"):
+        updated_series["title"] = updated_series["title_ru"] # самостоятельное задание: копируем русское название, если оригинальное пустое
+    series[id] = updated_series
+    return jsonify(series[id]), 200

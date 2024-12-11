@@ -11,15 +11,22 @@ function FillSeriesList() {
             series.forEach(seriesItem => {
                 let tr = document.createElement('tr');
 
-                let tdTitle = document.createElement('td');
-                let tdTitleRus = document.createElement('td');
-                let tdYear = document.createElement('td');
-                let tdActions = document.createElement('td');
 
-                tdTitle.innerText = seriesItem.title || 'N/A';
+                let tdTitleRus = document.createElement('td');
                 tdTitleRus.innerText = seriesItem.title_ru || 'N/A';
+
+                let tdTitle = document.createElement('td');
+                tdTitle.classList.add('italic'); 
+                tdTitle.innerHTML = seriesItem.title
+                    ? `(${seriesItem.title})` 
+                    : '(N/A)'; 
+
+    
+                let tdYear = document.createElement('td');
                 tdYear.innerText = seriesItem.year || 'N/A';
 
+              
+                let tdActions = document.createElement('td');
                 let editButton = document.createElement('button');
                 editButton.innerText = 'редактировать';
                 editButton.onclick = function () {
@@ -33,13 +40,13 @@ function FillSeriesList() {
                 };
 
                 tdActions.append(editButton, deleteButton);
-                tr.append(tdTitle, tdTitleRus, tdYear, tdActions);
+
+                tr.append(tdTitleRus, tdTitle, tdYear, tdActions);
                 tbody.append(tr);
             });
         })
         .catch(error => console.error('Error fetching series:', error));
 }
-
 function deleteSeries(id) {
     if (!confirm('Вы точно хотите удалить сериал?')) return;
 
@@ -58,7 +65,7 @@ function showModal() {
     document.getElementById('title-ru').value = '';
     document.getElementById('year').value = '';
     document.getElementById('description').value = '';
-    document.getElementById('description-error').textContent = ''; // Очистка ошибки
+    document.getElementById('description-error').textContent = ''; 
 }
 
 function hideModal() {
