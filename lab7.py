@@ -62,3 +62,20 @@ def del_series(id):
         return '', 204  # Успешное удаление, возвращаем код 204
     else:
         return {"error": "Series not found"}, 404  # Ошибка 404, если id не в пределах диапазона
+
+
+@lab7.route('/lab7/rest-api/series/<int:id>', methods=['PUT'])
+def put_series(id):
+    # Проверка корректности диапазона ID
+    if id < 0 or id >= len(series):
+        return {"error": "Series not found"}, 404
+
+    series_item = request.get_json()
+
+    # Проверка корректности данных
+    if not series_item or not all(key in series_item for key in ["title", "title_ru", "year", "description"]):
+        return {"error": "Invalid data provided"}, 400
+
+    # Обновление записи
+    series[id] = series_item
+    return series[id], 200
