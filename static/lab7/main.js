@@ -11,9 +11,9 @@ function FillSeriesList() {
                 return;
             }
 
-            tbody.innerHTML = ''; // Очищаем содержимое таблицы
+            tbody.innerHTML = ''; // Очищаем 
 
-            series.forEach(series => {
+            series.forEach((seriesItem, index) => { 
                 let tr = document.createElement('tr');
 
                 let tdTitle = document.createElement('td');
@@ -21,15 +21,18 @@ function FillSeriesList() {
                 let tdYear = document.createElement('td');
                 let tdActions = document.createElement('td');
 
-                tdTitle.innerText = series.title || 'N/A';
-                tdTitleRus.innerText = series.title_ru || 'N/A';
-                tdYear.innerText = series.year || 'N/A';
+                tdTitle.innerText = seriesItem.title || 'N/A';
+                tdTitleRus.innerText = seriesItem.title_ru || 'N/A';
+                tdYear.innerText = seriesItem.year || 'N/A';
 
                 let editButton = document.createElement('button');
                 editButton.innerText = 'редактировать';
 
                 let deleteButton = document.createElement('button');
                 deleteButton.innerText = 'удалить';
+                deleteButton.onclick = function () {
+                    deleteSeries(index); // Передаём индекс
+                };
 
                 tdActions.append(editButton, deleteButton);
 
@@ -39,4 +42,15 @@ function FillSeriesList() {
             });
         })
         .catch(error => console.error('Error fetching series:', error));
+}
+
+function deleteSeries(id) {
+    if (!confirm('Вы точно хотите удалить сериал?'))
+        return;
+
+    fetch(`/lab7/rest-api/series/${id}`, { method: 'DELETE' }) // Исправлено использование шаблонной строки
+        .then(() => {
+            FillSeriesList(); // Обновляем список после удаления
+        })
+        .catch(error => console.error('Error deleting series:', error));
 }
