@@ -92,15 +92,6 @@ function sendSeries() {
         description: descriptionField.value.trim(),
     };
 
-    if (!series.description) {
-        descriptionError.textContent = 'Описание сериала обязательно для заполнения!';
-        descriptionField.style.border = '2px solid red';
-        return;
-    }
-
-    descriptionError.textContent = '';
-    descriptionField.style.border = '';
-
     const url = id ? `/lab7/rest-api/series/${id}` : '/lab7/rest-api/series/';
     const method = id ? 'PUT' : 'POST';
 
@@ -110,16 +101,24 @@ function sendSeries() {
         body: JSON.stringify(series),
     })
         .then(response => {
-            if (!response.ok) throw new Error('Ошибка при добавлении/редактировании сериала');
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(
+                        err.errors ? err.errors.join("; ") : "Не удалось выполнить действие"
+                    );
+                });
+            }
+            return response.json();
+        })
+        .then(() => {
             FillSeriesList();
             hideModal();
         })
         .catch(error => {
-            console.error('Error sending series:', error);
-            alert('Не удалось выполнить действие. Попробуйте снова.');
+            descriptionError.textContent = error.message; // Отображаем ошибку в интерфейсе
+            descriptionField.style.border = '2px solid red';
         });
 }
-
 function editSeries(series) {
     showModal();
     document.getElementById('id').value = series.id;

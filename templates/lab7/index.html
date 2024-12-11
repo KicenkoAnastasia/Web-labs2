@@ -53,11 +53,11 @@
         z-index: 100;
         box-shadow: 3px 3px 5px black;
         background: rgb(208, 163, 186);
-        width: 600px;
+        width: 500px; /* Уменьшена ширина */
         color: #00274d;
         left: 50%;
         top: 220px;
-        margin-left: -300px;
+        margin-left: -250px; /* Центрирование окна */
         position: absolute;
         padding: 20px;
         font-weight: bold;
@@ -76,17 +76,20 @@
     }
     .modal input, .modal textarea {
         width: 100%;
+        max-width: 100%; /* Гарантирует, что поле ввода не выйдет за границы */
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        box-sizing: border-box; /* Учет внутренних отступов */
     }
     .error-message {
         color: red;
         font-size: 14px;
     }
-    td.italic {
-        font-style: italic;
-        color: #bbbbbb;
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
     }
 </style>
 

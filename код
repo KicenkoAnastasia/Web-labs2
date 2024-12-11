@@ -128,6 +128,9 @@ function editSeries(series) {
     document.getElementById('year').value = series.year;
     document.getElementById('description').value = series.description;
 }
+
+
+
 <!-- index.html -->
 {% extends "base.html" %}
 
@@ -259,7 +262,10 @@ function editSeries(series) {
     });
 </script>
 {% endblock %}
-# lab7.py
+
+
+
+ lab7.py
 from flask import Blueprint, render_template, request, jsonify
 
 lab7 = Blueprint('lab7', __name__)
@@ -315,3 +321,4 @@ def update_series(id):
         updated_series["title"] = updated_series["title_ru"] # самостоятельное задание: копируем русское название, если оригинальное пустое
     series[id] = updated_series
     return jsonify(series[id]), 200
+
