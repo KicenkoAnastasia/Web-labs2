@@ -29,7 +29,7 @@
     th {
         background-color: #004080;
     }
-    footer,header{
+    footer, header {
         background-color: #00274d;
     }
     button {
@@ -49,30 +49,76 @@
         z-index: 100;
         box-shadow: 3px 3px 5px black;
         background: rgb(208, 163, 186);
-        width: 480px;
+        width: 600px; /* Ширина модального окна */
         color: #00274d;
         left: 50%;
         top: 220px;
-        margin-left: -240px;
+        margin-left: -300px; /* Центрирование модального окна */
         position: absolute;
         padding: 20px;
         font-weight: bold;
         display: none;
         flex-direction: column;
-        gap: 15px;
+        gap: 20px; /* Расстояние между элементами */
         font-size: 15px;
+        border-radius: 10px; /* Радиус углов */
     }
+    
     .modal label {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column; /* Текст метки располагается над полем ввода */
+        align-items: flex-start;
         width: 100%;
+        margin-bottom: 10px; /* Отступ между метками */
+        font-size: 14px; /* Размер шрифта для меток */
     }
-    .modal input, .modal textarea {
-        width: 100%;
+    
+    .modal input,
+    .modal textarea {
+        width: 100%; /* Поля ввода занимают всю ширину контейнера */
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        font-size: 14px;
+        background: #fdfdfd; /* Светлый фон для ввода */
+        color: #00274d;
+        margin-top: 5px; /* Отступ между меткой и полем ввода */
+        box-sizing: border-box; /* Учитываем padding в ширину */
+    }
+    
+    .modal button {
+        width: 120px; /* Фиксированная ширина кнопок */
+        padding: 10px;
+        background-color: #ffc0cb;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        align-self: center; /* Центрирование кнопок */
+    }
+    
+    .modal button:hover {
+        background-color: #ff99aa; /* Цвет кнопки при наведении */
+    }
+    
+    .modal .button-container {
+        display: flex;
+        justify-content: space-between; /* Разделяем кнопки */
+        margin-top: 20px; /* Отступ сверху для кнопок */
+    }
+    
+    .modal .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: -10px; /* Слегка поднимаем сообщение об ошибке */
+        text-align: left;
+    }
+    
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: -5px;
     }
 </style>
 
@@ -99,7 +145,10 @@
     <label>Название сериала на русском: <input type="text" id="title-ru"></label>
     <label>Название сериала на оригинальном языке (если русский, оставьте пустым): <input type="text" id="title"></label>
     <label>Год выпуска: <input type="number" id="year"></label>
-    <label>Описание: <textarea id="description"></textarea></label>
+    <label>Описание: 
+        <textarea id="description"></textarea>
+    </label>
+    <div id="description-error" class="error-message"></div>
     <button onclick="sendSeries()">OK</button>
     <button onclick="cancel()">Отмена</button>
 </div>
@@ -110,5 +159,3 @@
     });
 </script>
 {% endblock %}
-
-
