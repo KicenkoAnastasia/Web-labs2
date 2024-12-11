@@ -1,3 +1,4 @@
+<!-- index.html -->
 {% extends "base.html" %}
 
 {% block lab %}
@@ -10,7 +11,6 @@
 
 {% block content %}
 <style>
-    
     body {
         background-color: #00274d;
         color: white;
@@ -21,18 +21,19 @@
         margin: 20px 0;
         border-collapse: collapse;
     }
-
     th, td {
         padding: 10px;
         text-align: left;
         border: 1px solid #ffffff;
     }
-
     th {
         background-color: #004080;
     }
+    footer,header{
+        background-color: #00274d;
+    }
     button {
-        background-color: #ffc0cb; 
+        background-color: #ffc0cb;
         border: none;
         padding: 10px 15px;
         margin: 5px;
@@ -41,25 +42,41 @@
         font-size: 14px;
         font-weight: bold;
     }
-
     button:hover {
-        background-color: #ff99aa; 
+        background-color: #ff99aa;
     }
-
-    div {
-        margin-top: 20px;
+    .modal {
+        z-index: 100;
+        box-shadow: 3px 3px 5px black;
+        background: rgb(208, 163, 186);
+        width: 480px;
+        color: #00274d;
+        left: 50%;
+        top: 220px;
+        margin-left: -240px;
+        position: absolute;
+        padding: 20px;
+        font-weight: bold;
+        display: none;
+        flex-direction: column;
+        gap: 15px;
+        font-size: 15px;
     }
-
-    h1 {
-        text-align: center;
-        margin-top: 20px;
+    .modal label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
     }
-    footer, header {
-        background-color: #00274d;
+    .modal input, .modal textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
 </style>
 
-<h1>Список фильмов</h1>
+<h1>Список сериалов</h1>
 
 <table>
     <thead>
@@ -73,8 +90,18 @@
     <tbody id="series-list"></tbody>
 </table>
 
-<div style="text-align: center;">
-    <button onclick="addseries()">Добавить фильм</button>
+<div>
+    <button onclick="addSeries()">Добавить сериал</button>
+</div>
+
+<div class="modal">
+    <input type="hidden" id="id">
+    <label>Название сериала на русском: <input type="text" id="title-ru"></label>
+    <label>Название сериала на оригинальном языке (если русский, оставьте пустым): <input type="text" id="title"></label>
+    <label>Год выпуска: <input type="number" id="year"></label>
+    <label>Описание: <textarea id="description"></textarea></label>
+    <button onclick="sendSeries()">OK</button>
+    <button onclick="cancel()">Отмена</button>
 </div>
 
 <script>
@@ -83,3 +110,5 @@
     });
 </script>
 {% endblock %}
+
+
