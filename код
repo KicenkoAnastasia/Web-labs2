@@ -322,3 +322,15 @@ def update_series(id):
     series[id] = updated_series
     return jsonify(series[id]), 200
 
+deactivate
+venv\Scripts\activate
+pip install flask-sqlalchemy --upgrade
+
+
+
+CREATE USER nastya_kicenko2_orm WITH PASSWORD '123';
+
+cd Web-labs2
+touch nastya_kicenko2_orm.db
+
+\c nastya_kicenko2_orm
