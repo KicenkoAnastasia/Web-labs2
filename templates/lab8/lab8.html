@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа8{% endblock %}
+
+{% block content %}
+<style>
+    h1 {
+        color: white;
+        text-align: center;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+        text-align: center;
+        display: flex;
+        justify-content: center; 
+        gap: 20px; 
+    }
+    li {
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        width: 170px; 
+        border: 2px solid #feb7b0; 
+        border-radius: 10px; 
+        box-sizing: border-box;
+    }
+    a {
+        color: #feb7b0;
+        text-decoration: none;
+        font-weight: bold;
+        width: 100%;
+        text-align: center;
+        line-height: 36px; 
+    }
+    a:hover {
+        color: #fffdfd;
+    }
+    .logout-btn {
+        color: #efc6c6;
+    }
+    .logout-btn:hover {
+        color: #fffdfd;
+    }
+    body, footer, header {
+        background-color: #434883;
+    }
+    header {
+        box-shadow: 0px 14px 8px #0000004d;
+        height: 50px;
+    }
+</style>
+
+<h1>Добро пожаловать, {{ login if login else "Anonymous" }}!</h1>
+
+<ul>
+    <li><a href="/lab8/login">Вход</a></li>
+    <li><a href="/lab8/register">Регистрация</a></li>
+    <li><a href="/lab8/articles">Список статей</a></li>
+    <li><a href="/lab8/create">Создать статью</a></li>
+</ul>
+
+{% if login %}
+    <ul>
+        <li>
+            <a href="/lab8/logout" class="logout-btn">Выйти</a>
+        </li>
+    </ul>
+{% endif %}
+
+{% endblock %}
