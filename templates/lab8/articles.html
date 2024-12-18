@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #434883;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            background-color: #434883;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .article-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px;
+        }
+
+        .article {
+            background-color: #4f5297;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 300px;
+            color: #fff;
+            text-align: justify;
+        }
+
+        .article h2 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #feb7b0;
+            text-align: center;
+        }
+
+        .article p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .article-footer {
+            text-align: right;
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 10px;
+        }
+    </style>
+
+    <h1>Список статей</h1>
+    <div class="article-container">
+        <div class="article">
+            <h2>Как учить Python</h2>
+            <p>Python — это мощный и простой для изучения язык программирования. Начать стоит с базового синтаксиса и простых задач.</p>
+            <div class="article-footer">Автор: Алекс</div>
+        </div>
+        <div class="article">
+            <h2>Введение в Flask</h2>
+            <p>Flask — это легкий фреймворк для веб-разработки. Он позволяет создавать простые и мощные веб-приложения.</p>
+            <div class="article-footer">Автор: Мария</div>
+        </div>
+        <div class="article">
+            <h2>Советы по CSS</h2>
+            <p>CSS позволяет стилизовать страницы. Используйте flexbox и grid для создания отзывчивых макетов.</p>
+            <div class="article-footer">Автор: Иван</div>
+        </div>
+        <div class="article">
+            <h2>Зачем учить SQL?</h2>
+            <p>SQL — это язык для работы с базами данных. Он позволяет извлекать, добавлять и изменять данные в таблицах.</p>
+            <div class="article-footer">Автор: Елена</div>
+        </div>
+        <div class="article">
+            <h2>Современные тенденции веб-разработки</h2>
+            <p>Современная веб-разработка включает использование SPA-фреймворков, таких как React, Vue и Angular.</p>
+            <div class="article-footer">Автор: Николай</div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #434883;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #4f5297;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 2px solid #feb7b0;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #fffbea;
+            color: #333;
+        }
+
+        textarea {
+            height: 150px;
+            resize: none;
+        }
+
+        button {
+            background-color: #feb7b0;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #f88e80;
+        }
+
+        .flash-message {
+            text-align: center;
+            color: red;
+            margin-bottom: 15px;
+        }
+    </style>
+
+    <h1>Создание статьи</h1>
+    <form action="{{ url_for('lab8.create_article') }}" method="post">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p style="color: red;">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <label>Заголовок:
+            <input type="text" name="title" required>
+        </label>
+        <label>Текст статьи:
+            <textarea name="article_text" rows="5" required></textarea>
+        </label>
+        <button type="submit">Создать</button>
+    </form>
+    {% endblock %}

@@ -1,24 +1,21 @@
-
-from flask import Flask, render_template, request, session, url_for, redirect, make_response
-
+# app.py
+from flask import Flask
 import os
 from os import path
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from db import db
+from db.models import Users
 
-import sys
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))  # Добавляем текущую директорию в sys.path
-
+# Создаем приложение Flask
 app = Flask(__name__)
 
-from db import db
-from db.models import Users, Articles
-# Конфигурация базы данных
+# Конфигурация приложения
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret_secret_key')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Выбор базы данных
-app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'postgres')
-
+# Настройка базы данных
+app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'sqlite')  # По умолчанию SQLite
 if app.config['DB_TYPE'] == 'postgres':
     db_name = 'nastya_kicenko2_orm'
     db_user = 'nastya_kicenko2_orm'
@@ -34,8 +31,18 @@ else:
 # Инициализация базы данных
 db.init_app(app)
 
+# Настройка LoginManager
+login_manager = LoginManager()
+login_manager.login_view = 'lab8.login'  # Путь на страницу логина
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Функция для загрузки пользователя по его ID"""
+    return Users.query.get(int(user_id))
+
 # Регистрация blueprints
-from lab1 import lab1  #подключение эскиза 
+from lab1 import lab1
 from lab2 import lab2
 from lab3 import lab3
 from lab4 import lab4
@@ -57,9 +64,9 @@ app.register_blueprint(lab8)
 with app.app_context():
     db.create_all()
 
+# Запуск приложения
 if __name__ == "__main__":
     app.run(debug=True)
-
 
 
 @app.route('/')

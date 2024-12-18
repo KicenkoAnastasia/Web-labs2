@@ -4,20 +4,100 @@
 {% block lab %}Лабораторная работа 8{% endblock %}
 
 {% block content %}
-    <h1>Регистрация</h1>
-    <form action="/lab8/register" method="post">
+<style>
+    body {
+        background-color: #434883;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    footer,header{
+        background-color: #434883;
+    }
+    header {
+        box-shadow: 0px 14px 8px #0000004d;
+        height: 50px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    form {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #4f5297;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    label {
+        display: inline-block;
+        margin-bottom: 10px;
+        width: 45%;
+        font-size: 16px;
+        text-align: right;
+        color: white;
+    }
+
+    input {
+        width: 50%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 2px solid #feb7b0;
+        border-radius: 5px;
+        background-color: #fffbea;
+        color: #333;
+    }
+
+    button {
+        background-color: #feb7b0;
+        color: white;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #f88e80;
+    }
+
+    .flash-message {
+        text-align: center;
+        background-color: #ff9e9e;
+        color: red;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+</style>
+
+<h1>Регистрация</h1>
+
+<!-- Flash-сообщения -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
         <div>
-            <label>
-                Логин: <input type="text" name="login" required>
-            </label>
+            {% for category, message in messages %}
+                <p class="flash-message">{{ message }}</p>
+            {% endfor %}
         </div>
-        <div>
-            <label>
-                Пароль: <input type="password" name="password" required>
-            </label>
-        </div>
-        <div>
-            <button type="submit">Зарегистрироваться</button>
-        </div>
-    </form>
+    {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('lab8.register') }}" method="post">
+    <label for="login">Логин:</label>
+    <input type="text" id="login" name="login" required>
+
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Зарегистрироваться</button>
+</form>
 {% endblock %}
