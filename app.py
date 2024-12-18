@@ -11,8 +11,9 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))  # Добавляе�
 app = Flask(__name__)
 
 from database import db
+from database.models import Users, Articles
 # Конфигурация базы данных
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'секретно-секретный секрет')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret_secret_key')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Выбор базы данных
