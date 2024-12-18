@@ -1,89 +1,113 @@
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 8{% endblock %}
+{% block lab %}Создание статьи{% endblock %}
 
 {% block content %}
-    <style>
-        body {
-            background-color: #434883;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
+<style>
+    body {
+        background-color: #434883;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    footer,header{
+        background-color: #434883;
+    }
+    header {
+        box-shadow: 0px 14px 8px #0000004d;
+        height: 50px;
+    }
+    
 
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-        }
+    body {
+        background-color: #434883;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
 
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #4f5297;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
+    header, footer {
+        background-color: #434883;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 28px;
+        color: #fff;
+    }
 
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 2px solid #feb7b0;
-            border-radius: 5px;
-            box-sizing: border-box;
-            background-color: #fffbea;
-            color: #333;
-        }
+    /* Центрирование блока */
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1; /* Занимает оставшееся пространство */
+    }
 
-        textarea {
-            height: 150px;
-            resize: none;
-        }
+    form {
+        max-width: 500px;
+        width: 100%;
+        padding: 20px;
+        background-color: #4f5297;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-        button {
-            background-color: #feb7b0;
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #fff;
+    }
 
-        button:hover {
-            background-color: #f88e80;
-        }
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 2px solid #feb7b0;
+        border-radius: 5px;
+        background-color: #fffbea;
+        color: #333;
+        box-sizing: border-box;
+    }
 
-        .flash-message {
-            text-align: center;
-            color: red;
-            margin-bottom: 15px;
-        }
-    </style>
+    textarea {
+        resize: none;
+        height: 150px;
+    }
 
-    <h1>Создание статьи</h1>
+    button {
+        background-color: #feb7b0;
+        border: none;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background-color: #f88e80;
+    }
+</style>
+
+<h1>Создание статьи</h1>
+<div class="form-container">
     <form action="{{ url_for('lab8.create_article') }}" method="post">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <p style="color: red;">{{ message }}</p>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <label>Заголовок:
-            <input type="text" name="title" required>
-        </label>
-        <label>Текст статьи:
-            <textarea name="article_text" rows="5" required></textarea>
-        </label>
-        <button type="submit">Создать</button>
+        <label for="title">Заголовок статьи:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="article_text">Текст статьи:</label>
+        <textarea id="article_text" name="article_text" required></textarea>
+
+        <button type="submit">Создать статью</button>
     </form>
-    {% endblock %}
+</div>
+{% endblock %}

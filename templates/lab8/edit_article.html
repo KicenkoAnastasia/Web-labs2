@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block lab %}Редактирование статьи{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #434883;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header, footer {
+            background-color: #434883;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #fff;
+        }
+
+        /* Центрирование формы */
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1; /* Занимает все пространство */
+        }
+
+        form {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            background-color: #4f5297;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #feb7b0;
+            border-radius: 5px;
+            background-color: #fffbea;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: none;
+            height: 150px;
+        }
+
+        button {
+            background-color: #feb7b0;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #f88e80;
+        }
+    </style>
+
+    <h1>Редактирование статьи</h1>
+    <div class="form-container">
+        <form action="{{ url_for('lab8.edit_article', article_id=article.id) }}" method="post">
+            <label for="title">Заголовок статьи:</label>
+            <input type="text" id="title" name="title" value="{{ article.title }}" required>
+
+            <label for="article_text">Текст статьи:</label>
+            <textarea id="article_text" name="article_text" rows="5" required>{{ article.article_text }}</textarea>
+
+            <button type="submit">Сохранить изменения</button>
+        </form>
+    </div>
+{% endblock %}
