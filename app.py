@@ -1,11 +1,12 @@
 # app.py
-from flask import Flask
+from flask import Flask, url_for, make_response, render_template,redirect, request 
 import os
 from os import path
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from db import db
 from db.models import Users
+
 
 # Создаем приложение Flask
 app = Flask(__name__)
