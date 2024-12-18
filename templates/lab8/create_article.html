@@ -10,46 +10,18 @@
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-    }
-    footer,header{
-        background-color: #434883;
-    }
-    header {
-        box-shadow: 0px 14px 8px #0000004d;
-        height: 50px;
-    }
-    
-
-    body {
-        background-color: #434883;
-        color: white;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
     }
-
-    header, footer {
+    header,footer{
         background-color: #434883;
     }
-
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 28px;
-        color: #fff;
+    footer{
+        text-align: right;
     }
-
-    /* Центрирование блока */
-    .form-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex: 1; /* Занимает оставшееся пространство */
-    }
-
     form {
         max-width: 500px;
         width: 100%;
@@ -57,19 +29,27 @@
         background-color: #4f5297;
         border-radius: 10px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    h1 {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 20px;
     }
 
     label {
-        display: block;
-        margin-bottom: 10px;
         font-size: 16px;
-        color: #fff;
+        margin-bottom: 5px;
+        color: white;
     }
 
-    input, textarea {
+    input[type="text"],
+    textarea {
         width: 100%;
         padding: 10px;
-        margin-bottom: 15px;
         border: 2px solid #feb7b0;
         border-radius: 5px;
         background-color: #fffbea;
@@ -79,18 +59,33 @@
 
     textarea {
         resize: none;
-        height: 150px;
+        height: 120px;
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        font-size: 16px;
+        color: white;
+    }
+
+    input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin: 0;
     }
 
     button {
         background-color: #feb7b0;
-        border: none;
         color: white;
+        font-size: 16px;
         padding: 10px;
+        border: none;
         border-radius: 5px;
         cursor: pointer;
-        width: 100%;
-        font-size: 16px;
+        transition: background-color 0.3s;
     }
 
     button:hover {
@@ -99,15 +94,22 @@
 </style>
 
 <h1>Создание статьи</h1>
-<div class="form-container">
-    <form action="{{ url_for('lab8.create_article') }}" method="post">
-        <label for="title">Заголовок статьи:</label>
-        <input type="text" id="title" name="title" required>
+<form action="{{ url_for('lab8.create_article') }}" method="post">
+    <!-- Заголовок статьи -->
+    <label for="title">Заголовок статьи:</label>
+    <input type="text" id="title" name="title" required>
 
-        <label for="article_text">Текст статьи:</label>
-        <textarea id="article_text" name="article_text" required></textarea>
+    <!-- Текст статьи -->
+    <label for="article_text">Текст статьи:</label>
+    <textarea id="article_text" name="article_text" required></textarea>
 
-        <button type="submit">Создать статью</button>
-    </form>
-</div>
+    <!-- Чекбокс для публичности -->
+    <div class="checkbox-container">
+        <input type="checkbox" id="is_public" name="is_public">
+        <label for="is_public">Сделать статью публичной</label>
+    </div>
+
+    <!-- Кнопка отправки -->
+    <button type="submit">Создать статью</button>
+</form>
 {% endblock %}

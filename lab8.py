@@ -54,7 +54,7 @@ def login():
         flash('Неверный логин или пароль!', 'error')
         return redirect(url_for('lab8.login'))
 
-    login_user(user, remember=remember)  # Используем remember
+    login_user(user, remember=remember)
     flash('Вы успешно вошли в систему!', 'success')
     return redirect(url_for('lab8.lab'))
 
@@ -66,12 +66,35 @@ def logout():
     flash('Вы успешно вышли из системы!', 'success')
     return redirect(url_for('lab8.login'))
 
-# Страница статей
-@lab8.route('/lab8/articles/')
-@login_required
+# Страница статей с поиском
+@lab8.route('/lab8/articles/', methods=['GET'])
 def articles():
-    articles_list = Articles.query.filter_by(login_id=current_user.id).all()
-    return render_template('lab8/articles.html', articles=articles_list, login=current_user.login)
+    search_query = request.args.get('search', '').strip()
+
+    # Базовый запрос для неавторизованных пользователей: только публичные статьи
+    if not current_user.is_authenticated:
+        articles_list = Articles.query.filter_by(is_public=True)
+    else:
+        # Для авторизованных пользователей: свои статьи и публичные статьи других пользователей
+        articles_list = Articles.query.filter(
+            (Articles.login_id == current_user.id) | (Articles.is_public == True)
+        )
+
+    # Поиск по заголовку и тексту статьи
+    if search_query:
+        articles_list = articles_list.filter(
+            Articles.title.ilike(f'%{search_query}%') |
+            Articles.article_text.ilike(f'%{search_query}%')
+        )
+
+    articles_list = articles_list.all()
+
+    return render_template(
+        'lab8/articles.html',
+        articles=articles_list,
+        search_query=search_query,
+        login=current_user.login if current_user.is_authenticated else None
+    )
 
 # Создание статьи
 @lab8.route('/lab8/create_article/', methods=['GET', 'POST'])
@@ -82,6 +105,7 @@ def create_article():
 
     title = request.form.get('title')
     article_text = request.form.get('article_text')
+    is_public = request.form.get('is_public') == 'on'  # Получение состояния чекбокса
 
     if not title or not article_text:
         flash('Заголовок и текст статьи не должны быть пустыми!', 'error')
@@ -91,8 +115,7 @@ def create_article():
         login_id=current_user.id,
         title=title,
         article_text=article_text,
-        is_favorite=False,
-        is_public=True,
+        is_public=is_public,
         likes=0
     )
     db.session.add(new_article)
@@ -115,6 +138,7 @@ def edit_article(article_id):
 
     article.title = request.form.get('title')
     article.article_text = request.form.get('article_text')
+    article.is_public = request.form.get('is_public') == 'on'  # Обновление публичности
 
     db.session.commit()
     flash('Статья успешно обновлена!', 'success')
@@ -133,3 +157,19 @@ def delete_article(article_id):
     db.session.commit()
     flash('Статья успешно удалена!', 'success')
     return redirect(url_for('lab8.articles'))
+
+# Просмотр публичных статей для неавторизованных пользователей
+@lab8.route('/lab8/public_articles/', methods=['GET'])
+def public_articles():
+    search_query = request.args.get('search', '').strip()
+    articles_list = Articles.query.filter_by(is_public=True)
+
+    # Поиск по публичным статьям
+    if search_query:
+        articles_list = articles_list.filter(
+            Articles.title.ilike(f'%{search_query}%') |
+            Articles.article_text.ilike(f'%{search_query}%')
+        )
+
+    articles_list = articles_list.all()
+    return render_template('lab8/public_articles.html', articles=articles_list, search_query=search_query)

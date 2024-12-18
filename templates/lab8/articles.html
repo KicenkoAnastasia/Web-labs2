@@ -1,50 +1,67 @@
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 8{% endblock %}
+{% block lab %}Список статей{% endblock %}
 
 {% block content %}
     <style>
-        
         body {
             background-color: #434883;
             color: white;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        footer,header{
+
+        header, footer {
             background-color: #434883;
         }
-        header {
-            box-shadow: 0px 14px 8px #0000004d;
-            height: 50px;
+        
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #feb7b0;
         }
-        
-            h1 {
-                text-align: center;
-                color: white;
-                margin-top: 30px;
-            }
-        
-            a {
-                color: #feb7b0;
-                text-decoration: none;
-            }
-        
-            a:hover {
-                text-decoration: underline;
-            }
-       
+
+        .search-form {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .search-form input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: 2px solid #feb7b0;
+            border-radius: 5px;
+            background-color: #fffbea;
+            color: #333;
+        }
+
+        .search-form button {
+            background-color: #feb7b0;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #f88e80;
+        }
+
         .article-container {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
+            margin-top: 20px;
         }
 
         .article {
             background-color: #4f5297;
-            color: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -54,6 +71,7 @@
         .article h2 {
             text-align: center;
             color: #feb7b0;
+            margin-top: 0;
         }
 
         .article p {
@@ -63,7 +81,7 @@
         .actions {
             display: flex;
             justify-content: space-between;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .actions a, .actions button {
@@ -73,6 +91,7 @@
             padding: 5px 10px;
             border-radius: 5px;
             text-decoration: none;
+            cursor: pointer;
         }
 
         .actions button:hover, .actions a:hover {
@@ -80,20 +99,44 @@
         }
     </style>
 
-    <h1>Ваши статьи</h1>
-    <a href="{{ url_for('lab8.create_article') }}">Создать статью</a>
+    <h1>Список статей</h1>
+
+    <!-- Поиск -->
+    <form method="GET" action="{{ url_for('lab8.articles') }}" class="search-form">
+        <input type="text" name="search" placeholder="Введите текст для поиска" value="{{ search_query }}">
+        <button type="submit">Поиск</button>
+    </form>
+
+    <!-- Создание статьи -->
+    {% if current_user.is_authenticated %}
+    <div class="search-form">
+        <a href="{{ url_for('lab8.create_article') }}">
+            <button>Создать статью</button>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Статьи -->
     <div class="article-container">
         {% for article in articles %}
-            <div class="article">
-                <h2>{{ article.title }}</h2>
-                <p>{{ article.article_text }}</p>
-                <div class="actions">
-                    <a href="{{ url_for('lab8.edit_article', article_id=article.id) }}">Редактировать</a>
-                    <form action="{{ url_for('lab8.delete_article', article_id=article.id) }}" method="post">
-                        <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить статью?');">Удалить</button>
-                    </form>
-                </div>
+        <div class="article">
+            <h2>{{ article.title }}</h2>
+            <p>{{ article.article_text }}</p>
+            <div>
+                <small>Автор: {{ article.login_id }}</small>
+                {% if article.is_public %}(Публичная){% endif %}
             </div>
+            {% if current_user.is_authenticated and article.login_id == current_user.id %}
+            <div class="actions">
+                <a href="{{ url_for('lab8.edit_article', article_id=article.id) }}">Редактировать</a>
+                <form action="{{ url_for('lab8.delete_article', article_id=article.id) }}" method="post" style="display: inline;">
+                    <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить статью?');">Удалить</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <p style="text-align: center;">Статей не найдено.</p>
         {% endfor %}
     </div>
 {% endblock %}
