@@ -1,0 +1,86 @@
+<!-- index1.html  -->
+{% extends "base.html" %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url('https://png.pngtree.com/background/20210710/original/pngtree-white-stylish-christmas-day-panels-background-picture-image_973987.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        text-align: center;
+        color: white;
+        padding: 15px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .image-container {
+        text-align: center;
+        margin: 20px auto;
+    }
+
+    .image-container img {
+        max-width: 300px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .delete-btn {
+        display: inline-block;
+        background-color: #333;
+        color: white;
+        padding: 10px 15px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .delete-btn:hover {
+        background-color: #555;
+    }
+</style>
+
+<header>
+    <h1>Создайте свою новогоднюю открытку!</h1>
+</header>
+
+<div class="form-container">
+    <form method="POST">
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        <label for="name">Введите ваше имя:</label>
+        <input type="text" id="name" name="name" placeholder="Ваше имя" required>
+        <button type="submit">Далее</button>
+    </form>
+</div>
+
+{% if last_image %}
+<div class="image-container">
+    <h3>Последняя открытка :</h3>
+    <img src="{{ last_image }}" alt="Последнее изображение">
+    <form method="POST">
+        <button type="submit" name="delete_image" class="delete-btn">Удалить</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

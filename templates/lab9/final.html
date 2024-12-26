@@ -1,0 +1,63 @@
+<!-- final.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    body {
+        background: url('https://png.pngtree.com/background/20210710/original/pngtree-white-stylish-christmas-day-panels-background-picture-image_973987.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        text-align: center;
+        color: white;
+        padding: 15px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .content-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .content-container p {
+        font-size: 18px;
+        margin: 20px 0;
+        color: #333;
+    }
+
+    .content-container img {
+        max-width: 300px;
+        margin: 20px auto;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+        text-align: center;
+        color: white;
+        padding: 15px 0;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+<header>
+    <h1>Поздравляем, {{ name }}!</h1>
+</header>
+
+<div class="content-container">
+    <p>{{ message }}</p>
+    <img src="{{ image }}" alt="Подарок">
+</div>
+
+
+{% endblock %}

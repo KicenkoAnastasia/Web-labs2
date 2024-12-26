@@ -16,7 +16,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret_secret_key')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Настройка базы данных
-app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'sqlite')  # По умолчанию SQLite
+app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'sqlite')  
 if app.config['DB_TYPE'] == 'postgres':
     db_name = 'nastya_kicenko2_orm'
     db_user = 'nastya_kicenko2_orm'
@@ -51,6 +51,7 @@ from lab5 import lab5
 from lab6 import lab6
 from lab7 import lab7
 from lab8 import lab8
+from lab9 import lab9
 
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
@@ -60,6 +61,7 @@ app.register_blueprint(lab5)
 app.register_blueprint(lab6)
 app.register_blueprint(lab7)
 app.register_blueprint(lab8)
+app.register_blueprint(lab9)
 
 # Создание таблиц в базе данных при старте приложения
 with app.app_context():

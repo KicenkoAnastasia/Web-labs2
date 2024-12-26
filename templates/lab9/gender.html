@@ -1,0 +1,102 @@
+<!-- gender.html -->
+{% extends "base.html" %}
+
+{% block title %}Выбор пола{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url('https://png.pngtree.com/background/20210710/original/pngtree-white-stylish-christmas-day-panels-background-picture-image_973987.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #333;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        text-align: center;
+        color: white;
+        padding: 15px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .content-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80vh; /* Центрирование формы по вертикали */
+    }
+
+    form {
+        max-width: 500px;
+        margin: 50px auto;
+        margin-top: -300px;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.8); 
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 18px;
+        color: #333;
+    }
+
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #000; 
+        font-size: 16px;
+        box-sizing: border-box;
+        text-align: center;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #555;
+    }
+
+    .info-text {
+        color: white;
+        margin-top: 20px;
+        font-size: 14px;
+        text-align: center;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+<header>
+    <h1>Выбор пола</h1>
+</header>
+
+<div class="content-container">
+    <form method="POST">
+        <label for="gender">Ваш пол:</label>
+        <select id="gender" name="gender" required>
+            <option value="мужчина">Мужчина</option>
+            <option value="женщина">Женщина</option>
+        </select>
+        <button type="submit">Далее</button>
+    </form>
+</div>
+
+{% endblock %}
